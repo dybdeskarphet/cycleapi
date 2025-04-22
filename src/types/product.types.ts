@@ -13,8 +13,9 @@ export namespace ProductTypes {
     launchDate: Date;
     price: number;
     region: Region;
-    sales: ISale[];
+    sales?: ISale[];
   }
+
   export type ProductInput = Pick<
     ProductTypes.IProduct,
     "name" | "category" | "launchDate" | "price" | "sales"
