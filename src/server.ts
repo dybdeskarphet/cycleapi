@@ -2,7 +2,8 @@ import express, { Express, NextFunction, Request, Response } from "express";
 import ip from "ip";
 import connectDatabase from "./db";
 import { productRoutes } from "./routes/product.routes";
-import { ServiceError } from "./errors/service.error";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./swagger";
 
 const app: Express = express();
 const port = process.env.API_PORT || 3000;
@@ -29,8 +30,9 @@ app.use(
   }),
 );
 
-app.use("/products", productRoutes);
-app.get("/", (req: Request, res: Response) => {
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api/v1/products", productRoutes);
+app.get("/api/v1", (req: Request, res: Response) => {
   res.send("Hello world!");
 });
 
