@@ -33,7 +33,10 @@ app.use(
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1/products", productRoutes);
 app.get("/api/v1", (req: Request, res: Response) => {
-  res.send("Hello world!");
+  res.send("Go to /api-docs to see the full documentation.");
+});
+app.get("/", (req: Request, res: Response) => {
+  res.redirect("/api/v1");
 });
 
 app.listen(port, () => {
