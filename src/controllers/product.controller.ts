@@ -5,64 +5,42 @@ import {
   postNewSaleService,
 } from "../services/product.service";
 import { handleControllerError } from "../utils/error-response";
+import { withController } from "../utils/with-controller";
 
-const postProductController = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  try {
+const postProductController = withController(
+  async (req: Request, res: Response) => {
     const product = await createProductService(req.body);
     res.status(201).json({ message: "Product created.", data: { product } });
-  } catch (error) {
-    handleControllerError(res, error, true);
     return;
-  }
-};
+  },
+);
 
-const getAllProductsController = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  try {
+const getAllProductsController = withController(
+  async (req: Request, res: Response) => {
     const products = await getProductService();
     res
       .status(201)
       .json({ message: "All products are listed.", data: { products } });
-  } catch (error) {
-    handleControllerError(res, error, true);
-    return;
-  }
-};
+  },
+);
 
-const getProductByIdController = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  try {
+const getProductByIdController = withController(
+  async (req: Request, res: Response) => {
     const product = await getProductService({ _id: req.params.id });
     res
       .status(201)
       .json({ message: "Product is displayed.", data: { product } });
-  } catch (error) {
-    handleControllerError(res, error, true);
-    return;
-  }
-};
+  },
+);
 
-const postNewSaleController = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  try {
+const postNewSaleController = withController(
+  async (req: Request, res: Response) => {
     await getProductService({ _id: req.params.id });
     const sale = await postNewSaleService(req.params.id, req.body);
     res.status(201).json({ message: "New sale created.", data: { sale } });
     return;
-  } catch (error) {
-    handleControllerError(res, error, true);
-    return;
-  }
-};
+  },
+);
 
 export {
   postProductController,
