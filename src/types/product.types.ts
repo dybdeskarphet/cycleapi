@@ -1,11 +1,7 @@
+import { Types } from "mongoose";
 import Region from "../enums/region.enum";
 
 export namespace ProductTypes {
-  export interface ISale {
-    timestamp: Date;
-    unitsSold: number;
-  }
-
   export interface IProduct extends Document {
     name: string;
     category: string;
@@ -13,7 +9,7 @@ export namespace ProductTypes {
     launchDate: Date;
     price: number;
     region: Region;
-    sales?: ISale[];
+    sales: Types.ObjectId[];
   }
 
   export type ProductInput = Pick<
