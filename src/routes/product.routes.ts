@@ -2,6 +2,7 @@ import express from "express";
 import {
   getAllProductsController,
   getProductByIdController,
+  postNewSaleController,
   postProductController,
 } from "../controllers/product.controller";
 
@@ -71,5 +72,38 @@ router.get("/:id", getProductByIdController);
  *      - Products
  */
 router.get("/", getAllProductsController);
+
+/**
+ * @swagger
+ * /api/v1/products/{productId}/sale:
+ *  post:
+ *    summary: Create a new sale
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              amount:
+ *                type: number
+ *                default: 1
+ *              customPrice:
+ *                type: number
+ *                required: false
+ *    parameters:
+ *      - in: path
+ *        name: productId
+ *        required: true
+ *        schema:
+ *          type: string
+ *        description: The ID of the product
+ *    responses:
+ *      201:
+ *        description: New sale added
+ *    tags:
+ *      - Sale
+ */
+router.post("/:id/sale", postNewSaleController);
 
 export { router as productRoutes };
