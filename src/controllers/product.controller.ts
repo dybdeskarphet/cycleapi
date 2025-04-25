@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   createProductService,
   getProductService,
+  postNewSaleService,
 } from "../services/product.service";
 import { handleControllerError } from "../utils/error-response";
 
@@ -48,8 +49,24 @@ const getProductByIdController = async (
   }
 };
 
+const postNewSaleController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    await getProductService({ _id: req.params.id });
+    const sale = await postNewSaleService(req.params.id, req.body);
+    res.status(201).json({ message: "New sale created.", data: { sale } });
+    return;
+  } catch (error) {
+    handleControllerError(res, error, true);
+    return;
+  }
+};
+
 export {
   postProductController,
   getAllProductsController,
   getProductByIdController,
+  postNewSaleController,
 };
