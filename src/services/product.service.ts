@@ -14,6 +14,15 @@ const getProductService = async (filters: Record<string, any> = {}) => {
   return result;
 };
 
+const getSaleService = async (filters: Record<string, any> = {}) => {
+  const result = await Unit.find(filters).exec();
+  if (!result || !(result instanceof Product)) {
+    throw new ServiceError(404, "Couldn't find any sale(s).");
+  }
+
+  return result;
+};
+
 const getProductByIdService = async (id: string) => {
   const product = await Product.findById(validateAndReturnObjectId(id)).exec();
   if (!product) {
@@ -47,9 +56,31 @@ const createSaleService = async (
   await product.save();
 };
 
+const deleteSaleService = async (productId: string, saleId: string) => {
+  const product = await getProductByIdService(productId);
+  const sale = await getSaleService({ _id: saleId });
+
+  Unit.deleteOne({ _id: saleId }, (err: Error, result: DeleteResult) => {
+    if (err) {
+      throw new ServiceError(
+        500,
+        "Could not perform delete action due to server error.",
+      );
+    } else {
+      product.sales = product.sales.filter(
+        (id) => id === validateAndReturnObjectId(saleId),
+      );
+      product.save();
+    }
+  });
+
+  return sale;
+};
+
 export {
   createProductService,
   getProductService,
   createSaleService,
   getProductByIdService,
+  deleteSaleService,
 };
