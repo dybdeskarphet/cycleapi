@@ -17,7 +17,7 @@ const getProductService = async (filters: Record<string, any> = {}) => {
 
 const getProductByIdService = async (
   id: string,
-): Promise<ProductTypes.IProduct> => {
+): Promise<ProductTypes.ProductDocument> => {
   const product = await Product.findById(validateAndReturnObjectId(id)).exec();
   if (!product || !(product instanceof Product)) {
     throw new ServiceError(404, "Couldn't find any product by this ID.");
@@ -26,7 +26,9 @@ const getProductByIdService = async (
   return product;
 };
 
-const getSaleByIdService = async (id: string): Promise<UnitTypes.IUnit> => {
+const getSaleByIdService = async (
+  id: string,
+): Promise<UnitTypes.UnitDocument> => {
   const sale = await Unit.findById(validateAndReturnObjectId(id)).exec();
   if (!sale || !(sale instanceof Unit)) {
     throw new ServiceError(404, "Couldn't find any sale by this ID.");
@@ -47,7 +49,7 @@ const createProductService = async (product: ProductTypes.ProductInput) => {
 };
 
 const createSaleService = async (
-  product: ProductTypes.IProduct,
+  product: ProductTypes.ProductDocument,
   unitProps: Record<string, any>,
 ) => {
   const unit = new Unit({ product: product._id, ...unitProps });
@@ -58,17 +60,15 @@ const createSaleService = async (
 };
 
 const deleteSaleService = async (
-  product: ProductTypes.IProduct,
-  saleId: string,
+  product: ProductTypes.ProductDocument,
+  sale: UnitTypes.UnitDocument,
 ) => {
   const deleteResult = await Unit.deleteOne({
-    _id: validateAndReturnObjectId(saleId),
+    _id: sale._id,
   });
 
   if (deleteResult.deletedCount > 0) {
-    product.sales = product.sales.filter(
-      (id) => !id.equals(validateAndReturnObjectId(saleId)),
-    );
+    product.sales = product.sales.filter((id) => !id.equals(sale._id));
     await product.save();
   }
 

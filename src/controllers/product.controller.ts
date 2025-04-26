@@ -48,7 +48,7 @@ const deleteSaleByIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.productId);
     const sale = await getSaleByIdService(req.params.saleId);
-    const deleteCount = await deleteSaleService(product, req.params.saleId);
+    const deleteCount = await deleteSaleService(product, sale);
     res
       .status(201)
       .json({ message: `${deleteCount} sale(s) deleted.`, data: { sale } });

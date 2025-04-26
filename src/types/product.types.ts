@@ -1,8 +1,8 @@
-import { Document, Types } from "mongoose";
+import { HydratedDocument, Types } from "mongoose";
 import Region from "../enums/region.enum";
 
 export namespace ProductTypes {
-  export interface IProduct extends Document {
+  export interface IProduct {
     name: string;
     category: string;
     creationDate: Date;
@@ -11,6 +11,8 @@ export namespace ProductTypes {
     region: Region;
     sales: Types.ObjectId[];
   }
+
+  export type ProductDocument = HydratedDocument<ProductTypes.IProduct>;
 
   export type ProductInput = Pick<
     ProductTypes.IProduct,
