@@ -47,7 +47,7 @@ const postNewSaleController = withController(
 const deleteSaleByIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.productId);
-    const sale = await getSaleByIdService(req.params.salesId);
+    const sale = await getSaleByIdService(req.params.saleId);
     const deleteCount = await deleteSaleService(product, req.params.saleId);
     res
       .status(201)
@@ -60,4 +60,5 @@ export {
   getAllProductsController,
   getProductByIdController,
   postNewSaleController,
+  deleteSaleByIdController,
 };
