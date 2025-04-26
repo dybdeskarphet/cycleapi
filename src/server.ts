@@ -3,7 +3,8 @@ import ip from "ip";
 import connectDatabase from "./db";
 import { productRoutes } from "./routes/product.routes";
 import swaggerUi from "swagger-ui-express";
-import swaggerSpec from "./swagger";
+import swaggerSpec from "./middlewares/swagger.middleware";
+import docsMiddleware from "./middlewares/swagger.middleware";
 
 const app: Express = express();
 const port = process.env.API_PORT || 3000;
@@ -30,14 +31,16 @@ app.use(
   }),
 );
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/api/v1/products", productRoutes);
+app.get("/", (req: Request, res: Response) => {
+  // TODO: Change it to /api/v1 before release.
+  res.redirect("/api-docs");
+});
 app.get("/api/v1", (req: Request, res: Response) => {
   res.send("Go to /api-docs to see the full documentation.");
 });
-app.get("/", (req: Request, res: Response) => {
-  res.redirect("/api/v1");
-});
+
+app.use("/api-docs", swaggerUi.serve, docsMiddleware);
+app.use("/api/v1/products", productRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://${ip.address()}:${port}`);

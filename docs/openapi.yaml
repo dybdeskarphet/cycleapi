@@ -1,0 +1,107 @@
+openapi: 3.1.0
+info:
+  title: CycleAPI
+  description: A simple API to manage books.
+  version: "1.0.0"
+
+paths:
+  /products:
+    get:
+      summary: Get all products
+      responses:
+        200:
+          description: List of products.
+      tags:
+        - Products
+    post:
+      summary: Create a new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                category:
+                  type: string
+                launchDate:
+                  type: string
+                  format: date
+                price:
+                  type: number
+      responses:
+        201:
+          description: Product created.
+      tags:
+        - Products
+
+  /products/{id}:
+    get:
+      summary: Get a product by ID
+      responses:
+        200:
+          description: Product returned.
+        404:
+          description: Product not found.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the product
+      tags:
+        - Products
+
+  /products/{productId}/sales:
+    post:
+      summary: Create a new sale
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  default: 1
+                customPrice:
+                  type: number
+                  required: false
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+          description: The ID of the product
+      responses:
+        201:
+          description: New sale added.
+      tags:
+        - Sale
+
+  /products/{productId}/sales/{saleId}:
+    delete:
+      summary: Delete a sale
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+          description: The ID of the product
+        - in: path
+          name: saleId
+          required: true
+          schema:
+            type: string
+          description: The ID of the sale
+      responses:
+        201:
+          description: Sale is deleted.
+      tags:
+        - Sale
