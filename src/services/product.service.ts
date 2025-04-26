@@ -1,9 +1,10 @@
 import { ServiceError } from "../errors/service.error";
 import { Product } from "../models/product.model";
-import { Unit } from "../models/unit.model";
 import { ProductTypes } from "../types/product.types";
 import mongoose, { DeleteResult, Error } from "mongoose";
 import { validateAndReturnObjectId } from "../utils/id-validator";
+import { UnitTypes } from "../types/unit.types";
+import { Unit } from "../models/unit.model";
 
 const getProductService = async (filters: Record<string, any> = {}) => {
   const result = await Product.find(filters).exec();
@@ -14,27 +15,20 @@ const getProductService = async (filters: Record<string, any> = {}) => {
   return result;
 };
 
-const getProductByIdService = async (id: string) => {
+const getProductByIdService = async (
+  id: string,
+): Promise<ProductTypes.IProduct> => {
   const product = await Product.findById(validateAndReturnObjectId(id)).exec();
-  if (!product) {
+  if (!product || !(product instanceof Product)) {
     throw new ServiceError(404, "Couldn't find any product by this ID.");
   }
 
   return product;
 };
 
-const getSaleService = async (filters: Record<string, any> = {}) => {
-  const result = await Unit.find(filters).exec();
-  if (!result || !(result instanceof Product)) {
-    throw new ServiceError(404, "Couldn't find any sale(s).");
-  }
-
-  return result;
-};
-
-const getSaleByIdService = async (id: string) => {
+const getSaleByIdService = async (id: string): Promise<UnitTypes.IUnit> => {
   const sale = await Unit.findById(validateAndReturnObjectId(id)).exec();
-  if (!sale) {
+  if (!sale || !(sale instanceof Unit)) {
     throw new ServiceError(404, "Couldn't find any product by this ID.");
   }
 
@@ -63,25 +57,22 @@ const createSaleService = async (
   await product.save();
 };
 
-const deleteSaleService = async (productId: string, saleId: string) => {
-  const product = await getProductByIdService(productId);
-  const sale = await getSaleService({ _id: saleId });
-
-  Unit.deleteOne({ _id: saleId }, (err: Error, result: DeleteResult) => {
-    if (err) {
-      throw new ServiceError(
-        500,
-        "Could not perform delete action due to server error.",
-      );
-    } else {
-      product.sales = product.sales.filter(
-        (id) => id === validateAndReturnObjectId(saleId),
-      );
-      product.save();
-    }
+const deleteSaleService = async (
+  product: ProductTypes.IProduct,
+  saleId: string,
+) => {
+  const deleteResult = await Unit.deleteOne({
+    _id: validateAndReturnObjectId(saleId),
   });
 
-  return sale;
+  if (deleteResult.deletedCount > 0) {
+    product.sales = product.sales.filter(
+      (id) => id === validateAndReturnObjectId(saleId),
+    );
+    product.save();
+  }
+
+  return deleteResult.deletedCount;
 };
 
 export {
@@ -89,5 +80,6 @@ export {
   getProductService,
   createSaleService,
   getProductByIdService,
+  getSaleByIdService,
   deleteSaleService,
 };
