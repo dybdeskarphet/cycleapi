@@ -1,5 +1,6 @@
 import { Response } from "express";
 import { ServiceError } from "../errors/service.error";
+import { StatusCodes } from "http-status-codes";
 
 const handleControllerError = (
   res: Response,
@@ -12,14 +13,17 @@ const handleControllerError = (
       ...(error.errors ? { errors: error.errors } : []),
     });
   } else if (error instanceof Error && error.name === "ValidationError") {
-    res.status(400).json({ message: `${error}` });
+    res.status(StatusCodes.BAD_REQUEST).json({ message: `${error}` });
   } else if (error instanceof SyntaxError) {
-    res.status(400).json({ message: `Invalid JSON format.` });
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: `Invalid JSON format.` });
   } else {
     (verbose || process.env.VERBOSE_LOG === "true") && console.error(error);
-    res.status(500).json({ message: "Internal server error." });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Internal server error." });
   }
 };
 
 export { handleControllerError };
-
