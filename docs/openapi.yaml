@@ -54,6 +54,20 @@ paths:
           description: The ID of the product
       tags:
         - Products
+    delete:
+      summary: Delete a product
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the product
+      responses:
+        201:
+          description: Product is deleted.
+      tags:
+        - Products
 
   /products/{productId}/sales:
     post:
@@ -82,7 +96,7 @@ paths:
         201:
           description: New sale added.
       tags:
-        - Sale
+        - Sales
 
   /products/{productId}/sales/{saleId}:
     delete:
@@ -104,4 +118,4 @@ paths:
         201:
           description: Sale is deleted.
       tags:
-        - Sale
+        - Sales
