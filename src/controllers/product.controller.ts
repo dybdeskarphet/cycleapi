@@ -4,6 +4,8 @@ import {
   getProductService,
   createSaleService,
   getProductByIdService,
+  getSaleByIdService,
+  deleteSaleService,
 } from "../services/product.service";
 import { withController } from "../utils/with-controller";
 
@@ -26,7 +28,7 @@ const getAllProductsController = withController(
 
 const getProductByIdController = withController(
   async (req: Request, res: Response) => {
-    const product = await getProductService({ _id: req.params.id });
+    const product = await getProductByIdService(req.params.id);
     res
       .status(201)
       .json({ message: "Product is displayed.", data: { product } });
@@ -39,6 +41,17 @@ const postNewSaleController = withController(
     const sale = await createSaleService(product, req.body);
     res.status(201).json({ message: "New sale created.", data: { sale } });
     return;
+  },
+);
+
+const deleteSaleByIdController = withController(
+  async (req: Request, res: Response) => {
+    const product = await getProductByIdService(req.params.productId);
+    const sale = await getSaleByIdService(req.params.salesId);
+    const deleteCount = await deleteSaleService(product, req.params.saleId);
+    res
+      .status(201)
+      .json({ message: `${deleteCount} sale(s) deleted.`, data: { sale } });
   },
 );
 
