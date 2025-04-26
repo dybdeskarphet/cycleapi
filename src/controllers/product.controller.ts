@@ -2,9 +2,8 @@ import { Request, Response } from "express";
 import {
   createProductService,
   getProductService,
-  postNewSaleService,
+  createSaleService,
 } from "../services/product.service";
-import { handleControllerError } from "../utils/error-response";
 import { withController } from "../utils/with-controller";
 
 const postProductController = withController(
@@ -36,7 +35,7 @@ const getProductByIdController = withController(
 const postNewSaleController = withController(
   async (req: Request, res: Response) => {
     await getProductService({ _id: req.params.id });
-    const sale = await postNewSaleService(req.params.id, req.body);
+    const sale = await createSaleService(req.params.id, req.body);
     res.status(201).json({ message: "New sale created.", data: { sale } });
     return;
   },
