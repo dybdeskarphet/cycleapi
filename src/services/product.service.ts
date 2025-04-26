@@ -14,6 +14,15 @@ const getProductService = async (filters: Record<string, any> = {}) => {
   return result;
 };
 
+const getProductByIdService = async (id: string) => {
+  const product = await Product.findById(validateAndReturnObjectId(id)).exec();
+  if (!product) {
+    throw new ServiceError(404, "Couldn't find any product by this ID.");
+  }
+
+  return product;
+};
+
 const getSaleService = async (filters: Record<string, any> = {}) => {
   const result = await Unit.find(filters).exec();
   if (!result || !(result instanceof Product)) {
@@ -23,13 +32,13 @@ const getSaleService = async (filters: Record<string, any> = {}) => {
   return result;
 };
 
-const getProductByIdService = async (id: string) => {
-  const product = await Product.findById(validateAndReturnObjectId(id)).exec();
-  if (!product) {
+const getSaleByIdService = async (id: string) => {
+  const sale = await Unit.findById(validateAndReturnObjectId(id)).exec();
+  if (!sale) {
     throw new ServiceError(404, "Couldn't find any product by this ID.");
   }
 
-  return product;
+  return sale;
 };
 
 const createProductService = async (product: ProductTypes.ProductInput) => {
