@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { Document, Types } from "mongoose";
 import Region from "../enums/region.enum";
 
 export namespace ProductTypes {
