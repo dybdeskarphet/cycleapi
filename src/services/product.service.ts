@@ -53,12 +53,10 @@ const createProductService = async (product: ProductTypes.ProductInput) => {
 };
 
 const createSaleService = async (
-  productId: string,
+  product: ProductTypes.IProduct,
   unitProps: Record<string, any>,
 ) => {
-  const product = await getProductByIdService(productId);
-
-  const unit = new Unit({ product: productId, ...unitProps });
+  const unit = new Unit({ product: product._id, ...unitProps });
   await unit.save();
 
   product.sales.push(unit._id as mongoose.Types.ObjectId);

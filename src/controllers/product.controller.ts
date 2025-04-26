@@ -3,6 +3,7 @@ import {
   createProductService,
   getProductService,
   createSaleService,
+  getProductByIdService,
 } from "../services/product.service";
 import { withController } from "../utils/with-controller";
 
@@ -34,8 +35,8 @@ const getProductByIdController = withController(
 
 const postNewSaleController = withController(
   async (req: Request, res: Response) => {
-    await getProductService({ _id: req.params.id });
-    const sale = await createSaleService(req.params.id, req.body);
+    const product = await getProductByIdService(req.params.id);
+    const sale = await createSaleService(product, req.body);
     res.status(201).json({ message: "New sale created.", data: { sale } });
     return;
   },
