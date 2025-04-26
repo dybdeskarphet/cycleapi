@@ -5,11 +5,15 @@ import mongoose, { DeleteResult, Error } from "mongoose";
 import { validateAndReturnObjectId } from "../utils/id-validator";
 import { UnitTypes } from "../types/unit.types";
 import { Unit } from "../models/unit.model";
+import { StatusCodes } from "http-status-codes";
 
 const getProductService = async (filters: Record<string, any> = {}) => {
   const result = await Product.find(filters).exec();
   if (!result) {
-    throw new ServiceError(404, "Couldn't find any product(s).");
+    throw new ServiceError(
+      StatusCodes.NOT_FOUND,
+      "Couldn't find any product(s).",
+    );
   }
 
   return result;
@@ -20,7 +24,10 @@ const getProductByIdService = async (
 ): Promise<ProductTypes.ProductDocument> => {
   const product = await Product.findById(validateAndReturnObjectId(id)).exec();
   if (!product || !(product instanceof Product)) {
-    throw new ServiceError(404, "Couldn't find any product by this ID.");
+    throw new ServiceError(
+      StatusCodes.NOT_FOUND,
+      "Couldn't find any product by this ID.",
+    );
   }
 
   return product;
@@ -31,21 +38,37 @@ const getSaleByIdService = async (
 ): Promise<UnitTypes.UnitDocument> => {
   const sale = await Unit.findById(validateAndReturnObjectId(id)).exec();
   if (!sale || !(sale instanceof Unit)) {
-    throw new ServiceError(404, "Couldn't find any sale by this ID.");
+    throw new ServiceError(
+      StatusCodes.NOT_FOUND,
+      "Couldn't find any sale by this ID.",
+    );
   }
 
   return sale;
 };
 
-const createProductService = async (product: ProductTypes.ProductInput) => {
-  if (!product) {
-    throw new ServiceError(400, "Product details are needed.");
+const createProductService = async (
+  productInput: ProductTypes.ProductInput,
+) => {
+  if (!productInput) {
+    throw new ServiceError(
+      StatusCodes.BAD_REQUEST,
+      "Product details are needed.",
+    );
   }
 
-  const newProduct = new Product(product);
+  const newProduct = new Product(productInput);
   await newProduct.save();
 
   return newProduct;
+};
+
+const deleteProductService = async (product: ProductTypes.ProductDocument) => {
+  return (
+    await Product.deleteOne({
+      _id: product._id,
+    })
+  ).deletedCount;
 };
 
 const createSaleService = async (
@@ -82,4 +105,5 @@ export {
   getProductByIdService,
   getSaleByIdService,
   deleteSaleService,
+  deleteProductService,
 };
