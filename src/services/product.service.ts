@@ -29,7 +29,7 @@ const getProductByIdService = async (
 const getSaleByIdService = async (id: string): Promise<UnitTypes.IUnit> => {
   const sale = await Unit.findById(validateAndReturnObjectId(id)).exec();
   if (!sale || !(sale instanceof Unit)) {
-    throw new ServiceError(404, "Couldn't find any product by this ID.");
+    throw new ServiceError(404, "Couldn't find any sale by this ID.");
   }
 
   return sale;
@@ -67,9 +67,9 @@ const deleteSaleService = async (
 
   if (deleteResult.deletedCount > 0) {
     product.sales = product.sales.filter(
-      (id) => id === validateAndReturnObjectId(saleId),
+      (id) => !id.equals(validateAndReturnObjectId(saleId)),
     );
-    product.save();
+    await product.save();
   }
 
   return deleteResult.deletedCount;
