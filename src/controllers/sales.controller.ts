@@ -6,12 +6,14 @@ import {
   createSaleService,
   deleteSaleService,
   getSaleByIdService,
+  salesPerDayService,
 } from "../services/sales.service";
+import { UnitTypes } from "../types/unit.types";
 
 const getSalesByProductIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
-    res.status(StatusCodes.CREATED).json({
+    res.status(StatusCodes.OK).json({
       message: `All sales are listed for ${product.name}.`,
       data: product.sales,
     });
@@ -41,8 +43,23 @@ const deleteSaleByIdController = withController(
   },
 );
 
+const getSalesPerDayByProductIdController = withController(
+  async (req: Request, res: Response) => {
+    const product = await getProductByIdService(req.params.id, ["sales"]);
+    const result = salesPerDayService(
+      product,
+      product.sales as UnitTypes.UnitDocument[],
+    );
+    res.status(StatusCodes.OK).json({
+      message: `All sales are grouped by day and listed for ${product.name}.`,
+      data: result,
+    });
+  },
+);
+
 export {
   deleteSaleByIdController,
   postNewSaleController,
   getSalesByProductIdController,
+  getSalesPerDayByProductIdController,
 };
