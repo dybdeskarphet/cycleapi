@@ -5,7 +5,11 @@ import { ServiceError } from "../errors/service.error";
 import { validateAndReturnObjectId } from "../utils/id-validator";
 import { ProductTypes } from "../types/product.types";
 import { Types } from "mongoose";
-import { timeToDate } from "../utils/unit.utils";
+import {
+  createMiniUnit,
+  sortSalesByTime,
+  timeToDate,
+} from "../utils/unit.utils";
 
 const getSaleByIdService = async (
   id: string,
@@ -64,9 +68,7 @@ const salesPerDayService = (
   sales: UnitTypes.UnitDocument[],
 ) => {
   const price = product.price;
-  const sortedSales = sales.sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-  );
+  const sortedSales = sortSalesByTime(sales);
 
   let perDayArray = [];
 
@@ -85,10 +87,9 @@ const salesPerDayService = (
         (acc, item) => acc + item.amount,
         0,
       );
-      perDayArray.push({
-        amount: sumOfAmounts,
-        createdAt: timeToDate(sortedSales[i].createdAt),
-      });
+      perDayArray.push(
+        createMiniUnit(sumOfAmounts, timeToDate(sortedSales[i].createdAt)),
+      );
       tempArray = [sales[i + 1]];
       i++;
     }
@@ -96,10 +97,9 @@ const salesPerDayService = (
 
   if (tempArray.length > 0 && sortedSales[i]) {
     const sumOfAmounts = tempArray.reduce((acc, item) => acc + item.amount, 0);
-    perDayArray.push({
-      amount: sumOfAmounts,
-      createdAt: timeToDate(sortedSales[i].createdAt),
-    });
+    perDayArray.push(
+      createMiniUnit(sumOfAmounts, timeToDate(sortedSales[i].createdAt)),
+    );
   }
 
   return perDayArray;
