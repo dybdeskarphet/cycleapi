@@ -10,5 +10,10 @@ export namespace UnitTypes {
     updatedAt: Date;
   }
 
+  export interface IMiniUnit {
+    amount: number;
+    createdAt: string;
+  }
+
   export type UnitDocument = HydratedDocument<IUnit>;
 }
