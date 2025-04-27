@@ -2,10 +2,7 @@ import { Request, Response } from "express";
 import {
   createProductService,
   getProductService,
-  createSaleService,
   getProductByIdService,
-  getSaleByIdService,
-  deleteSaleService,
   deleteProductService,
 } from "../services/product.service";
 import { withController } from "../utils/with-controller";
@@ -21,6 +18,7 @@ const postProductController = withController(
   },
 );
 
+// TODO: Use this as get products by filter, if no filter is provided, it gets all.
 const getAllProductsController = withController(
   async (req: Request, res: Response) => {
     const products = await getProductService();
@@ -50,33 +48,9 @@ const deleteProductByIdController = withController(
   },
 );
 
-const postNewSaleController = withController(
-  async (req: Request, res: Response) => {
-    const product = await getProductByIdService(req.params.id);
-    const sale = await createSaleService(product, req.body);
-    res
-      .status(StatusCodes.CREATED)
-      .json({ message: "New sale created.", data: { sale } });
-    return;
-  },
-);
-
-const deleteSaleByIdController = withController(
-  async (req: Request, res: Response) => {
-    const product = await getProductByIdService(req.params.productId);
-    const sale = await getSaleByIdService(req.params.saleId);
-    const deleteCount = await deleteSaleService(product, sale);
-    res
-      .status(StatusCodes.OK)
-      .json({ message: `${deleteCount} sale(s) deleted.`, data: { sale } });
-  },
-);
-
 export {
   postProductController,
   getAllProductsController,
   getProductByIdController,
-  postNewSaleController,
-  deleteSaleByIdController,
   deleteProductByIdController,
 };

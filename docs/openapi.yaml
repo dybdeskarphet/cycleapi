@@ -54,6 +54,7 @@ paths:
           description: The ID of the product
       tags:
         - Products
+
     delete:
       summary: Delete a product
       parameters:
@@ -70,6 +71,22 @@ paths:
         - Products
 
   /products/{productId}/sales:
+    get:
+      summary: Get the sales of a product by ID
+      responses:
+        200:
+          description: Sales returned.
+        404:
+          description: No sale found.
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+          description: The ID of the product
+      tags:
+        - Sales
     post:
       summary: Create a new sale
       requestBody:
