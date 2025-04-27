@@ -46,7 +46,7 @@ const deleteSaleByIdController = withController(
 const getSalesPerDayByProductIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
-    const result = salesPerDayService(
+    const result = await salesPerDayService(
       product,
       product.sales as UnitTypes.UnitDocument[],
     );

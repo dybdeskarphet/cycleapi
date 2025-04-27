@@ -63,7 +63,7 @@ const deleteSaleService = async (
   return deleteResult.deletedCount;
 };
 
-const salesPerDayService = (
+const salesPerDayService = async (
   product: ProductTypes.ProductDocument,
   sales: UnitTypes.UnitDocument[],
 ) => {
