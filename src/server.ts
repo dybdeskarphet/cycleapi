@@ -3,8 +3,8 @@ import ip from "ip";
 import connectDatabase from "./db";
 import { productRoutes } from "./routes/product.routes";
 import swaggerUi from "swagger-ui-express";
-import swaggerSpec from "./middlewares/swagger.middleware";
 import docsMiddleware from "./middlewares/swagger.middleware";
+import { lifecycleRoutes } from "./routes/lifecycle.routes";
 
 const app: Express = express();
 const port = process.env.API_PORT || 3000;
@@ -41,6 +41,7 @@ app.get("/api/v1", (req: Request, res: Response) => {
 
 app.use("/api-docs", swaggerUi.serve, docsMiddleware);
 app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/lifecycle", lifecycleRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://${ip.address()}:${port}`);
