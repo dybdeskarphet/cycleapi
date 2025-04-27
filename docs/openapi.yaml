@@ -115,6 +115,24 @@ paths:
       tags:
         - Sales
 
+  /products/{productId}/sales/per-day:
+    get:
+      summary: Get the sales per day of a product by ID
+      responses:
+        200:
+          description: Sales returned.
+        404:
+          description: No sale found.
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+          description: The ID of the product
+      tags:
+        - Sales
+
   /products/{productId}/sales/{saleId}:
     delete:
       summary: Delete a sale
