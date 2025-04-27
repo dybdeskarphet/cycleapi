@@ -5,6 +5,7 @@ import { ServiceError } from "../errors/service.error";
 import { validateAndReturnObjectId } from "../utils/id-validator";
 import { ProductTypes } from "../types/product.types";
 import { Types } from "mongoose";
+import { timeToDate } from "../utils/unit.utils";
 
 const getSaleByIdService = async (
   id: string,
@@ -40,11 +41,73 @@ const deleteSaleService = async (
   });
 
   if (deleteResult.deletedCount > 0) {
-    product.sales = product.sales.filter((id) => !id.equals(sale._id));
+    product.sales = product.sales.filter((id) => {
+      if (!(id instanceof Types.ObjectId)) {
+        console.error(
+          "deleteSaleService: Don't populate the sales field of the product in the controller.",
+        );
+        throw new ServiceError(
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          "Internal server error.",
+        );
+      }
+      return !(id as Types.ObjectId).equals(sale._id);
+    });
     await product.save();
   }
 
   return deleteResult.deletedCount;
 };
 
-export { getSaleByIdService, createSaleService, deleteSaleService };
+const salesPerDayService = (
+  product: ProductTypes.ProductDocument,
+  sales: UnitTypes.UnitDocument[],
+) => {
+  const price = product.price;
+  const sortedSales = sales.sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+  );
+
+  let perDayArray = [];
+
+  let i = 0;
+  let tempArray = [sortedSales[i]];
+
+  while (i < sortedSales.length - 1) {
+    if (
+      timeToDate(sortedSales[i].createdAt) ===
+      timeToDate(sortedSales[i + 1].createdAt)
+    ) {
+      tempArray.push(sortedSales[i + 1]);
+      i++;
+    } else {
+      const sumOfAmounts = tempArray.reduce(
+        (acc, item) => acc + item.amount,
+        0,
+      );
+      perDayArray.push({
+        amount: sumOfAmounts,
+        createdAt: timeToDate(sortedSales[i].createdAt),
+      });
+      tempArray = [sales[i + 1]];
+      i++;
+    }
+  }
+
+  if (tempArray.length > 0 && sortedSales[i]) {
+    const sumOfAmounts = tempArray.reduce((acc, item) => acc + item.amount, 0);
+    perDayArray.push({
+      amount: sumOfAmounts,
+      createdAt: timeToDate(sortedSales[i].createdAt),
+    });
+  }
+
+  return perDayArray;
+};
+
+export {
+  getSaleByIdService,
+  createSaleService,
+  deleteSaleService,
+  salesPerDayService,
+};
