@@ -1,11 +1,10 @@
-import dotenv from "dotenv";
+import "dotenv/config";
 import ip from "ip";
 import YAML from "yamljs";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
 import { NextFunction, Request, Response } from "express";
 
-dotenv.config();
 const port = process.env.API_PORT || 3000;
 const openApiDocument = YAML.load(
   path.join(__dirname, "../../docs/openapi.yaml"),

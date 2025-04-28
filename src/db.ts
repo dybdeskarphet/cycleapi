@@ -1,7 +1,5 @@
-import dotenv from "dotenv";
+import "dotenv/config";
 import mongoose from "mongoose";
-
-dotenv.config();
 
 if (!process.env.MONGODB_URI) {
   console.error("No database URI specified in .env");
