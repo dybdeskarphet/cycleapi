@@ -7,25 +7,36 @@ import { movingAveragesOfSalesService } from "../services/lifecycle.service";
 import { StatusCodes } from "http-status-codes";
 import { ServiceError } from "../errors/service.error";
 
+// TODO: Split this to weighted and simple
 const getMovingAveragesController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
-    let windowSize = 0;
     const salesByDay = await salesPerDayService(
       product,
       product.sales as UnitTypes.UnitDocument[],
     );
 
-    if (req.body.windowSize) {
-      windowSize = req.body.windowSize;
-    } else {
+    let { windowSize, weight } = req.body;
+
+    if (windowSize <= 0) {
       throw new ServiceError(
         StatusCodes.BAD_REQUEST,
-        "Request body should have a windowSize value.",
+        "'windowSize' value should be larger than 0.",
       );
     }
 
-    const averages = await movingAveragesOfSalesService(salesByDay, windowSize);
+    if (typeof weight !== "boolean") {
+      throw new ServiceError(
+        StatusCodes.BAD_REQUEST,
+        "'weight' value should be boolean.",
+      );
+    }
+
+    const averages = await movingAveragesOfSalesService(
+      salesByDay,
+      windowSize,
+      weight,
+    );
 
     res.status(StatusCodes.OK).json({
       message: `Moving averages of ${product.name} is listed.`,

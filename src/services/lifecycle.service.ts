@@ -2,18 +2,16 @@ import { StatusCodes } from "http-status-codes";
 import { ServiceError } from "../errors/service.error";
 import { UnitTypes } from "../types/unit.types";
 import { withController } from "../utils/with-controller";
+import {
+  calculateAverageSales,
+  calculateWeightedAverageSales,
+} from "../utils/lifecycle.utils";
 
 const movingAveragesOfSalesService = async (
   sales: UnitTypes.IMiniUnit[],
   windowSize: number,
+  weight: boolean,
 ): Promise<UnitTypes.IMiniUnit[]> => {
-  if (windowSize <= 0) {
-    throw new ServiceError(
-      StatusCodes.BAD_REQUEST,
-      "Window size of moving averages can't be 0 or smaller.",
-    );
-  }
-
   if (windowSize > sales.length) {
     throw new ServiceError(
       StatusCodes.BAD_REQUEST,
@@ -24,14 +22,14 @@ const movingAveragesOfSalesService = async (
   let movingAverages: UnitTypes.IMiniUnit[] = [];
 
   for (let i = 0; i <= sales.length - windowSize; i++) {
-    const averageAmount =
-      sales.slice(i, i + windowSize).reduce((acc, val) => acc + val.amount, 0) /
-      windowSize;
+    let slice = sales.slice(i, i + windowSize);
+    let averageAmount = weight
+      ? await calculateWeightedAverageSales(slice, windowSize)
+      : await calculateAverageSales(slice, windowSize);
 
     const averageDate = new Date(
-      sales
-        .slice(i, i + windowSize)
-        .reduce((acc, val) => acc + Date.parse(val.createdAt), 0) / windowSize,
+      slice.reduce((acc, val) => acc + Date.parse(val.createdAt), 0) /
+        windowSize,
     ).toJSON();
 
     movingAverages.push({ amount: averageAmount, createdAt: averageDate });
