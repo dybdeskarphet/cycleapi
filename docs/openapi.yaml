@@ -173,6 +173,8 @@ paths:
               properties:
                 windowSize:
                   type: number
+                weight:
+                  type: boolean
       responses:
         201:
           description: Moving averages are listed.
