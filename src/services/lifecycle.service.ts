@@ -6,12 +6,13 @@ import {
   calculateAverageSales,
   calculateWeightedAverageSales,
 } from "../utils/lifecycle.utils";
+import { LifecycleTypes } from "../types/lifecycle.types";
 
 const movingAveragesOfSalesService = async (
   sales: UnitTypes.IMiniUnit[],
   windowSize: number,
   weight: boolean,
-): Promise<UnitTypes.IMiniUnit[]> => {
+): Promise<LifecycleTypes.MovingAveragesUnit[]> => {
   if (windowSize > sales.length) {
     throw new ServiceError(
       StatusCodes.BAD_REQUEST,
@@ -19,7 +20,7 @@ const movingAveragesOfSalesService = async (
     );
   }
 
-  let movingAverages: UnitTypes.IMiniUnit[] = [];
+  let movingAverages: LifecycleTypes.MovingAveragesUnit[] = [];
 
   for (let i = 0; i <= sales.length - windowSize; i++) {
     let slice = sales.slice(i, i + windowSize);
@@ -32,23 +33,24 @@ const movingAveragesOfSalesService = async (
         windowSize,
     ).toJSON();
 
-    movingAverages.push({ amount: averageAmount, createdAt: averageDate });
+    movingAverages.push({ amount: averageAmount, timestamp: averageDate });
   }
 
   return movingAverages;
 };
 
-// TODO: Use this in a controller
-const growthRateService = async (sales: UnitTypes.IMiniUnit[]) => {
-  let growthRates: UnitTypes.IMiniUnit[] = [];
+const growthRateService = async (
+  sales: UnitTypes.IMiniUnit[],
+): Promise<LifecycleTypes.GrowthRateUnit[]> => {
+  let growthRates: LifecycleTypes.GrowthRateUnit[] = [];
 
   for (let i = 1; i < sales.length; i++) {
     const growth =
       (sales[i].amount - sales[i - 1].amount) / sales[i - 1].amount;
 
     growthRates.push({
-      amount: growth,
-      createdAt: sales[i].createdAt,
+      rate: growth,
+      timestamp: sales[i].createdAt,
     });
   }
 
