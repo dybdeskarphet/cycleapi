@@ -1,12 +1,12 @@
-name: Bun Build Test
+name: Bun Tests
 on:
   push:
     branches: [main]
   pull_request:
 
 jobs:
-  my-job:
-    name: my-job
+  Build Test:
+    name: Build Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
