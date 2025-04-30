@@ -181,7 +181,7 @@ paths:
       tags:
         - Lifecycle
   /lifecycle/{productId}/growth-rates:
-    get:
+    post:
       summary: Get the growth rates of a product
       parameters:
         - in: path
@@ -190,8 +190,17 @@ paths:
           schema:
             type: string
           description: The ID of the product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                monthly:
+                  type: boolean
       responses:
         201:
-          description: Moving averages are listed.
+          description: Growth rates are listed.
       tags:
         - Lifecycle

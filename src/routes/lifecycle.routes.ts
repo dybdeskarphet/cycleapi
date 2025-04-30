@@ -7,6 +7,6 @@ import {
 const router = express.Router();
 
 router.post("/:id/moving-averages", getMovingAveragesController);
-router.get("/:id/growth-rates", getGrowthRateController);
+router.post("/:id/growth-rates", getGrowthRateController);
 
 export { router as lifecycleRoutes };
