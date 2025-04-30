@@ -74,7 +74,7 @@ const getGrowthRateController = withController(
   },
 );
 
-const salesAccelerationController = withController(
+const getSalesAccelerationController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
     const { monthly } = req.body;
@@ -100,4 +100,8 @@ const salesAccelerationController = withController(
   },
 );
 
-export { getMovingAveragesController, getGrowthRateController };
+export {
+  getMovingAveragesController,
+  getGrowthRateController,
+  getSalesAccelerationController,
+};
