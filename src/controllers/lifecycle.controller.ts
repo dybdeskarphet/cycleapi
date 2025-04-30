@@ -91,11 +91,11 @@ const getSalesAccelerationController = withController(
     );
 
     const growthRates = await growthRateService(salesByDay);
-    const salesAcceleration = await salesAccelerationService(growthRates);
+    const accelerations = await salesAccelerationService(growthRates);
 
     res.status(StatusCodes.OK).json({
       message: `Acceleration rates of ${product.name} is listed.`,
-      data: { salesAcceleration },
+      data: { accelerations },
     });
   },
 );
