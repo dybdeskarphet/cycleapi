@@ -180,3 +180,18 @@ paths:
           description: Moving averages are listed.
       tags:
         - Lifecycle
+  /lifecycle/{productId}/growth-rates:
+    get:
+      summary: Get the growth rates of a product
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+          description: The ID of the product
+      responses:
+        201:
+          description: Moving averages are listed.
+      tags:
+        - Lifecycle
