@@ -204,3 +204,27 @@ paths:
           description: Growth rates are listed.
       tags:
         - Lifecycle
+  /lifecycle/{productId}/acceleration-rates:
+    post:
+      summary: Get the acceleration rates of a product
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+          description: The ID of the product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                monthly:
+                  type: boolean
+      responses:
+        201:
+          description: Acceleration rates are listed.
+      tags:
+        - Lifecycle
