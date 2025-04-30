@@ -57,4 +57,24 @@ const growthRateService = async (
   return growthRates;
 };
 
-export { movingAveragesOfSalesService, growthRateService };
+const salesAccelerationService = async (
+  growthRates: LifecycleTypes.GrowthRateUnit[],
+): Promise<LifecycleTypes.AccelerationUnit[]> => {
+  let accelerationRates: LifecycleTypes.AccelerationUnit[] = [];
+
+  for (let i = 1; i < growthRates.length; i++) {
+    const acceleration = growthRates[i].rate - growthRates[i - 1].rate;
+    accelerationRates.push({
+      acceleration,
+      timestamp: growthRates[i].timestamp,
+    });
+  }
+
+  return accelerationRates;
+};
+
+export {
+  movingAveragesOfSalesService,
+  growthRateService,
+  salesAccelerationService,
+};
