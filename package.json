@@ -9,7 +9,7 @@
   "scripts": {
     "build": "bun build --target=bun src/*.ts src/**/*.ts --outdir=dist",
     "start": "bun run dist/src/server.js",
-    "dev": "bun run src/server.ts"
+    "dev": "bun --hot run src/server.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
