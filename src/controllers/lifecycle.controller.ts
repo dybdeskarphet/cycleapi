@@ -3,7 +3,10 @@ import { withController } from "../utils/with-controller";
 import { getProductByIdService } from "../services/product.service";
 import { salesPerDayService } from "../services/sales.service";
 import { UnitTypes } from "../types/unit.types";
-import { movingAveragesOfSalesService } from "../services/lifecycle.service";
+import {
+  growthRateService,
+  movingAveragesOfSalesService,
+} from "../services/lifecycle.service";
 import { StatusCodes } from "http-status-codes";
 import { ServiceError } from "../errors/service.error";
 
@@ -45,4 +48,29 @@ const getMovingAveragesController = withController(
   },
 );
 
-export { getMovingAveragesController };
+const getGrowthRateController = withController(
+  async (req: Request, res: Response) => {
+    const product = await getProductByIdService(req.params.id, ["sales"]);
+    const { monthly } = req.body;
+    if (typeof monthly !== "boolean") {
+      throw new ServiceError(
+        StatusCodes.BAD_REQUEST,
+        "'monthly' value should be boolean.",
+      );
+    }
+
+    const salesByDay = await salesPerDayService(
+      product,
+      product.sales as UnitTypes.UnitDocument[],
+    );
+
+    const growthRates = await growthRateService(salesByDay);
+
+    res.status(StatusCodes.OK).json({
+      message: `Growth rates of ${product.name} is listed.`,
+      data: { growthRates },
+    });
+  },
+);
+
+export { getMovingAveragesController, getGrowthRateController };
