@@ -38,4 +38,21 @@ const movingAveragesOfSalesService = async (
   return movingAverages;
 };
 
-export { movingAveragesOfSalesService };
+// TODO: Use this in a controller
+const growthRateService = async (sales: UnitTypes.IMiniUnit[]) => {
+  let growthRates: UnitTypes.IMiniUnit[] = [];
+
+  for (let i = 1; i < sales.length; i++) {
+    const growth =
+      (sales[i].amount - sales[i - 1].amount) / sales[i - 1].amount;
+
+    growthRates.push({
+      amount: growth,
+      createdAt: sales[i].createdAt,
+    });
+  }
+
+  return growthRates;
+};
+
+export { movingAveragesOfSalesService, growthRateService };
