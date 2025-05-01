@@ -11,7 +11,7 @@ import { ServiceError } from "../errors/service.error";
 import { Intervals } from "../enums/intervals.enum";
 import { SaleDocument } from "../types/sale.types";
 import { convertSalesDateRange } from "../utils/sale.utils";
-import { isValidInterval } from "../utils/time.utils";
+import { errorIfInvalidInterval, isValidInterval } from "../utils/time.utils";
 
 // TODO: Convert these to
 
@@ -19,12 +19,8 @@ const getMovingAveragesController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
     let { windowSize, weight, interval } = req.body;
-    if (!isValidInterval(interval)) {
-      throw new ServiceError(
-        StatusCodes.BAD_REQUEST,
-        "Interval should be 'daily', 'weekly', 'monthly', 'yearly'.",
-      );
-    }
+
+    await errorIfInvalidInterval(interval);
 
     const salesInterval = await convertSalesDateRange(
       product.sales as SaleDocument[],
