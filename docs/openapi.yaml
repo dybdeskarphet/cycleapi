@@ -213,8 +213,8 @@ paths:
             schema:
               type: object
               properties:
-                monthly:
-                  type: boolean
+                interval:
+                  type: string
       responses:
         201:
           description: Acceleration rates are listed.
