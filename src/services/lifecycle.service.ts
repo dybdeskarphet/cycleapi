@@ -38,7 +38,10 @@ const movingAveragesOfSalesService = async (
         windowSize,
     ).toJSON();
 
-    movingAverages.push({ amount: averageAmount, timestamp: averageDate });
+    movingAverages.push({
+      amount: averageAmount,
+      timestamp: slice[slice.length - 1].createdAt,
+    });
   }
 
   return movingAverages;
