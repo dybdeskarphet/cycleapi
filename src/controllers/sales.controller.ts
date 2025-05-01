@@ -21,7 +21,7 @@ const getSalesByProductIdController = withController(
 
     if (isValidInterval(interval)) {
       sales = await convertSalesDateRange(oldSales, interval);
-    } :lse if (interval === "instant") {
+    } else if (interval === "instant") {
       sales = oldSales;
     } else {
       throw new ServiceError(
