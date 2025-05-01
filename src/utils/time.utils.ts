@@ -1,4 +1,30 @@
 import { getISOWeek, getISOWeekYear } from "date-fns";
+import { Intervals } from "../enums/intervals.enum";
+import { IMiniSale, SaleDocument } from "../types/sale.types";
+
+export function isValidInterval(value: string): value is Intervals {
+  return Object.values(Intervals).includes(value as Intervals);
+}
+
+export const getDateOfSale = (
+  minisale: IMiniSale | SaleDocument,
+  date: string,
+): number => {
+  switch (date) {
+    case "month":
+      return new Date(minisale.createdAt).getMonth();
+    case "year":
+      return new Date(minisale.createdAt).getFullYear();
+    case "week":
+      return getWeekWithType(new Date(minisale.createdAt), "number");
+    case "full":
+      return parseInt(
+        timeToDate(new Date(minisale.createdAt), "full").replace(/-/g, ""),
+      );
+    default:
+      return -1;
+  }
+};
 
 export function getWeekWithType<T extends "string" | "number">(
   date: Date,

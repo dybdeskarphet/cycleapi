@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ServiceError } from "../errors/service.error";
 import { StatusCodes } from "http-status-codes";
 
-const handleControllerError = (
+export const handleControllerError = (
   res: Response,
   error: unknown,
   verbose: boolean = false,
@@ -25,8 +25,6 @@ const handleControllerError = (
       .json({ message: "Internal server error." });
   }
 };
-
-export { handleControllerError };
 
 export const withController = (
   controllerFn: (req: Request, res: Response) => Promise<void>,

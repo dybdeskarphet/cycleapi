@@ -1,16 +1,14 @@
-import { UnitTypes } from "../types/unit.types";
-import { Unit } from "../models/unit.model";
 import { StatusCodes } from "http-status-codes";
 import { ServiceError } from "../errors/service.error";
 import { validateAndReturnObjectId } from "../utils/mongoose.utils";
-import { ProductTypes } from "../types/product.types";
 import { Types } from "mongoose";
+import { SaleDocument } from "../types/sale.types";
+import { Sale } from "../models/sale.model";
+import { ProductDocument } from "../types/product.types";
 
-const getSaleByIdService = async (
-  id: string,
-): Promise<UnitTypes.UnitDocument> => {
-  const sale = await Unit.findById(validateAndReturnObjectId(id)).exec();
-  if (!sale || !(sale instanceof Unit)) {
+const getSaleByIdService = async (id: string): Promise<SaleDocument> => {
+  const sale = await Sale.findById(validateAndReturnObjectId(id)).exec();
+  if (!sale || !(sale instanceof Sale)) {
     throw new ServiceError(
       StatusCodes.NOT_FOUND,
       "Couldn't find any sale by this ID.",
@@ -21,10 +19,10 @@ const getSaleByIdService = async (
 };
 
 const createSaleService = async (
-  product: ProductTypes.ProductDocument,
+  product: ProductDocument,
   unitProps: Record<string, any>,
 ) => {
-  const unit = new Unit({ product: product._id, ...unitProps });
+  const unit = new Sale({ product: product._id, ...unitProps });
   await unit.save();
 
   product.sales.push(unit._id as Types.ObjectId);
@@ -32,10 +30,10 @@ const createSaleService = async (
 };
 
 const deleteSaleService = async (
-  product: ProductTypes.ProductDocument,
-  sale: UnitTypes.UnitDocument,
+  product: ProductDocument,
+  sale: SaleDocument,
 ) => {
-  const deleteResult = await Unit.deleteOne({
+  const deleteResult = await Sale.deleteOne({
     _id: sale._id,
   });
 

@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { withController } from "../utils/express.utils";
 import { getProductByIdService } from "../services/product.service";
-import { UnitTypes } from "../types/unit.types";
 import {
   growthRateService,
   movingAveragesOfSalesService,
@@ -9,8 +8,9 @@ import {
 } from "../services/lifecycle.service";
 import { StatusCodes } from "http-status-codes";
 import { ServiceError } from "../errors/service.error";
-import { convertSalesDateRange } from "../utils/lifecycle.utils";
-import { Intervals } from "../types/global.types";
+import { Intervals } from "../enums/intervals.enum";
+import { SaleDocument } from "../types/sale.types";
+import { convertSalesDateRange } from "../utils/sale.utils";
 
 // TODO: Convert these to
 
@@ -18,7 +18,7 @@ const getMovingAveragesController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
     const salesByDay = await convertSalesDateRange(
-      product.sales as UnitTypes.UnitDocument[],
+      product.sales as SaleDocument[],
       Intervals.Daily,
     );
     let { windowSize, weight } = req.body;
@@ -62,7 +62,7 @@ const getGrowthRateController = withController(
     }
 
     const salesByDay = await convertSalesDateRange(
-      product.sales as UnitTypes.UnitDocument[],
+      product.sales as SaleDocument[],
       Intervals.Daily,
     );
 
@@ -79,6 +79,7 @@ const getSalesAccelerationController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
     const { monthly } = req.body;
+
     if (typeof monthly !== "boolean") {
       throw new ServiceError(
         StatusCodes.BAD_REQUEST,
@@ -87,7 +88,7 @@ const getSalesAccelerationController = withController(
     }
 
     const salesByDay = await convertSalesDateRange(
-      product.sales as UnitTypes.UnitDocument[],
+      product.sales as SaleDocument[],
       Intervals.Daily,
     );
 

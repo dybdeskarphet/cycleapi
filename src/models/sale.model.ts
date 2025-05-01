@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import { UnitTypes } from "../types/unit.types";
+import { ISale } from "../types/sale.types";
 
-const UnitSchema = new mongoose.Schema<UnitTypes.IUnit>(
+const SaleSchema = new mongoose.Schema<ISale>(
   {
     product: {
       type: mongoose.Schema.Types.ObjectId,
@@ -14,6 +14,6 @@ const UnitSchema = new mongoose.Schema<UnitTypes.IUnit>(
   { timestamps: true },
 );
 
-const Unit = mongoose.model("Unit", UnitSchema);
+const Sale = mongoose.model("Sale", SaleSchema);
 
-export { Unit };
+export { Sale };

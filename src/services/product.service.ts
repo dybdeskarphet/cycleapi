@@ -1,6 +1,6 @@
 import { ServiceError } from "../errors/service.error";
 import { Product } from "../models/product.model";
-import { ProductTypes } from "../types/product.types";
+import { ProductDocument, ProductInput } from "../types/product.types";
 import { validateAndReturnObjectId } from "../utils/mongoose.utils";
 import { StatusCodes } from "http-status-codes";
 
@@ -19,7 +19,7 @@ const getProductService = async (filters: Record<string, any> = {}) => {
 const getProductByIdService = async (
   id: string,
   populateFields: string[] = [],
-): Promise<ProductTypes.ProductDocument> => {
+): Promise<ProductDocument> => {
   const product = await Product.findById(validateAndReturnObjectId(id))
     .populate(populateFields)
     .exec();
@@ -33,9 +33,7 @@ const getProductByIdService = async (
   return product;
 };
 
-const createProductService = async (
-  productInput: ProductTypes.ProductInput,
-) => {
+const createProductService = async (productInput: ProductInput) => {
   if (!productInput) {
     throw new ServiceError(
       StatusCodes.BAD_REQUEST,
@@ -49,7 +47,7 @@ const createProductService = async (
   return newProduct;
 };
 
-const deleteProductService = async (product: ProductTypes.ProductDocument) => {
+const deleteProductService = async (product: ProductDocument) => {
   return (
     await Product.deleteOne({
       _id: product._id,

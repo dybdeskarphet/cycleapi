@@ -1,19 +1,23 @@
 import { StatusCodes } from "http-status-codes";
 import { ServiceError } from "../errors/service.error";
-import { UnitTypes } from "../types/unit.types";
 import {
   calculateAverageSales,
   calculateWeightedAverageSales,
 } from "../utils/lifecycle.utils";
-import { LifecycleTypes } from "../types/lifecycle.types";
+import { IMiniSale } from "../types/sale.types";
+import {
+  AccelerationUnit,
+  GrowthRateUnit,
+  MovingAveragesUnit,
+} from "../types/lifecycle.types";
 
 // TODO: Add interval option to all of the below services and change how the controller works.
 
 const movingAveragesOfSalesService = async (
-  sales: UnitTypes.IMiniUnit[],
+  sales: IMiniSale[],
   windowSize: number,
   weight: boolean,
-): Promise<LifecycleTypes.MovingAveragesUnit[]> => {
+): Promise<MovingAveragesUnit[]> => {
   if (windowSize > sales.length) {
     throw new ServiceError(
       StatusCodes.BAD_REQUEST,
@@ -21,7 +25,7 @@ const movingAveragesOfSalesService = async (
     );
   }
 
-  let movingAverages: LifecycleTypes.MovingAveragesUnit[] = [];
+  let movingAverages: MovingAveragesUnit[] = [];
 
   for (let i = 0; i <= sales.length - windowSize; i++) {
     let slice = sales.slice(i, i + windowSize);
@@ -42,9 +46,9 @@ const movingAveragesOfSalesService = async (
 
 // TODO: Add monthly and weekly growth rate calculation parameter
 const growthRateService = async (
-  sales: UnitTypes.IMiniUnit[],
-): Promise<LifecycleTypes.GrowthRateUnit[]> => {
-  let growthRates: LifecycleTypes.GrowthRateUnit[] = [];
+  sales: IMiniSale[],
+): Promise<GrowthRateUnit[]> => {
+  let growthRates: GrowthRateUnit[] = [];
 
   for (let i = 1; i < sales.length; i++) {
     const growth =
@@ -60,9 +64,9 @@ const growthRateService = async (
 };
 
 const salesAccelerationService = async (
-  growthRates: LifecycleTypes.GrowthRateUnit[],
-): Promise<LifecycleTypes.AccelerationUnit[]> => {
-  let accelerationRates: LifecycleTypes.AccelerationUnit[] = [];
+  growthRates: GrowthRateUnit[],
+): Promise<AccelerationUnit[]> => {
+  let accelerationRates: AccelerationUnit[] = [];
 
   for (let i = 1; i < growthRates.length; i++) {
     const acceleration = growthRates[i].rate - growthRates[i - 1].rate;

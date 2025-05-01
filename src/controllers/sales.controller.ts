@@ -7,31 +7,27 @@ import {
   deleteSaleService,
   getSaleByIdService,
 } from "../services/sales.service";
-import { UnitTypes } from "../types/unit.types";
 import { ServiceError } from "../errors/service.error";
-import { LifecycleTypes } from "../types/lifecycle.types";
-import {
-  convertSalesDateRange,
-  isValidInterval,
-} from "../utils/lifecycle.utils";
+import { SaleDocument } from "../types/sale.types";
+import { convertSalesDateRange } from "../utils/sale.utils";
+import { isValidInterval } from "../utils/time.utils";
 
 const getSalesByProductIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
-    let oldSales = product.sales as UnitTypes.UnitDocument[];
+    let oldSales = product.sales as SaleDocument[];
     let sales = [];
     let interval = req.params.interval;
 
-    if (!isValidInterval(interval)) {
+    if (isValidInterval(interval)) {
+      sales = await convertSalesDateRange(oldSales, interval);
+    } :lse if (interval === "instant") {
+      sales = oldSales;
+    } else {
       throw new ServiceError(
         StatusCodes.BAD_REQUEST,
         "Interval should be 'daily', 'weekly', 'monthly', 'yearly' or 'instant'",
       );
-    } else {
-      sales =
-        interval === "instant"
-          ? oldSales
-          : await convertSalesDateRange(oldSales, interval);
     }
 
     res.status(StatusCodes.OK).json({

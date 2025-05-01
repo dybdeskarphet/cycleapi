@@ -1,15 +1,15 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { ProductTypes } from "../types/product.types";
 import Region from "../enums/region.enum";
+import { IProduct } from "../types/product.types";
 
-const ProductSchema = new mongoose.Schema<ProductTypes.IProduct>(
+const ProductSchema = new mongoose.Schema<IProduct>(
   {
     name: { type: String, required: true },
     category: { type: String, required: true },
     launchDate: { type: Date, required: true },
     price: { type: Number, required: true },
     region: { type: String, enum: Region, default: Region.TURKIYE },
-    sales: [{ type: mongoose.Schema.Types.ObjectId, ref: "Unit" }],
+    sales: [{ type: mongoose.Schema.Types.ObjectId, ref: "Sale" }],
   },
   { timestamps: true },
 );
