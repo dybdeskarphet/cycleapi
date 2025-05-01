@@ -1,10 +1,21 @@
 import { getISOWeek, getISOWeekYear } from "date-fns";
 import { Intervals } from "../enums/intervals.enum";
 import { IMiniSale, SaleDocument } from "../types/sale.types";
+import { ServiceError } from "../errors/service.error";
+import { StatusCodes } from "http-status-codes";
 
 export function isValidInterval(value: string): value is Intervals {
   return Object.values(Intervals).includes(value as Intervals);
 }
+
+export const errorIfInvalidInterval = async (interval: string) => {
+  if (!isValidInterval(interval)) {
+    throw new ServiceError(
+      StatusCodes.BAD_REQUEST,
+      "Interval should be 'daily', 'weekly', 'monthly', 'yearly'.",
+    );
+  }
+};
 
 export const getDateOfSale = (
   minisale: IMiniSale | SaleDocument,
