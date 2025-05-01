@@ -77,21 +77,15 @@ const getGrowthRateController = withController(
 const getSalesAccelerationController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
-    const { monthly } = req.body;
+    const { interval } = req.body;
+    await errorIfInvalidInterval(interval);
 
-    if (typeof monthly !== "boolean") {
-      throw new ServiceError(
-        StatusCodes.BAD_REQUEST,
-        "'monthly' value should be boolean.",
-      );
-    }
-
-    const salesByDay = await convertSalesDateRange(
+    const salesInterval = await convertSalesDateRange(
       product.sales as SaleDocument[],
-      Intervals.Daily,
+      interval,
     );
 
-    const growthRates = await growthRateService(salesByDay);
+    const growthRates = await growthRateService(salesInterval);
     const accelerations = await salesAccelerationService(growthRates);
 
     res.status(StatusCodes.OK).json({
