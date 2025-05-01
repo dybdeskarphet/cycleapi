@@ -57,20 +57,15 @@ const getMovingAveragesController = withController(
 const getGrowthRateController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
-    const { monthly } = req.body;
-    if (typeof monthly !== "boolean") {
-      throw new ServiceError(
-        StatusCodes.BAD_REQUEST,
-        "'monthly' value should be boolean.",
-      );
-    }
+    const { interval } = req.body;
+    await errorIfInvalidInterval(interval);
 
-    const salesByDay = await convertSalesDateRange(
+    const salesInterval = await convertSalesDateRange(
       product.sales as SaleDocument[],
-      Intervals.Daily,
+      interval,
     );
 
-    const growthRates = await growthRateService(salesByDay);
+    const growthRates = await growthRateService(salesInterval);
 
     res.status(StatusCodes.OK).json({
       message: `Growth rates of ${product.name} is listed.`,
