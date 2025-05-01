@@ -70,7 +70,7 @@ paths:
       tags:
         - Products
 
-  /products/{productId}/sales:
+  /products/{productId}/sales/{interval}:
     get:
       summary: Get the sales of a product by ID
       responses:
@@ -85,8 +85,16 @@ paths:
           schema:
             type: string
           description: The ID of the product
+        - in: path
+          name: interval
+          required: true
+          schema:
+            type: string
+          description: Interval of the sales
       tags:
         - Sales
+
+  /products/{productId}/sales:
     post:
       summary: Create a new sale
       requestBody:
@@ -112,24 +120,6 @@ paths:
       responses:
         201:
           description: New sale added.
-      tags:
-        - Sales
-
-  /products/{productId}/sales/per-day:
-    get:
-      summary: Get the sales per day of a product by ID
-      responses:
-        200:
-          description: Sales returned.
-        404:
-          description: No sale found.
-      parameters:
-        - in: path
-          name: productId
-          required: true
-          schema:
-            type: string
-          description: The ID of the product
       tags:
         - Sales
 

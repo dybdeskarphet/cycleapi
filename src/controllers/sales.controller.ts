@@ -1,21 +1,42 @@
 import { StatusCodes } from "http-status-codes";
-import { withController } from "../utils/with-controller";
+import { withController } from "../utils/express.utils";
 import { Request, Response } from "express";
 import { getProductByIdService } from "../services/product.service";
 import {
   createSaleService,
   deleteSaleService,
   getSaleByIdService,
-  salesPerDayService,
 } from "../services/sales.service";
 import { UnitTypes } from "../types/unit.types";
+import { ServiceError } from "../errors/service.error";
+import { LifecycleTypes } from "../types/lifecycle.types";
+import {
+  convertSalesDateRange,
+  isValidInterval,
+} from "../utils/lifecycle.utils";
 
 const getSalesByProductIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
+    let oldSales = product.sales as UnitTypes.UnitDocument[];
+    let sales = [];
+    let interval = req.params.interval;
+
+    if (!isValidInterval(interval)) {
+      throw new ServiceError(
+        StatusCodes.BAD_REQUEST,
+        "Interval should be 'daily', 'weekly', 'monthly', 'yearly' or 'instant'",
+      );
+    } else {
+      sales =
+        interval === "instant"
+          ? oldSales
+          : await convertSalesDateRange(oldSales, interval);
+    }
+
     res.status(StatusCodes.OK).json({
       message: `All sales are listed for ${product.name}.`,
-      data: product.sales,
+      data: sales,
     });
     return;
   },
@@ -43,23 +64,8 @@ const deleteSaleByIdController = withController(
   },
 );
 
-const getSalesPerDayByProductIdController = withController(
-  async (req: Request, res: Response) => {
-    const product = await getProductByIdService(req.params.id, ["sales"]);
-    const result = await salesPerDayService(
-      product,
-      product.sales as UnitTypes.UnitDocument[],
-    );
-    res.status(StatusCodes.OK).json({
-      message: `All sales are grouped by day and listed for ${product.name}.`,
-      data: result,
-    });
-  },
-);
-
 export {
   deleteSaleByIdController,
   postNewSaleController,
   getSalesByProductIdController,
-  getSalesPerDayByProductIdController,
 };

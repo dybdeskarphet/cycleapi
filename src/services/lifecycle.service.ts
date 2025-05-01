@@ -1,12 +1,13 @@
 import { StatusCodes } from "http-status-codes";
 import { ServiceError } from "../errors/service.error";
 import { UnitTypes } from "../types/unit.types";
-import { withController } from "../utils/with-controller";
 import {
   calculateAverageSales,
   calculateWeightedAverageSales,
 } from "../utils/lifecycle.utils";
 import { LifecycleTypes } from "../types/lifecycle.types";
+
+// TODO: Add interval option to all of the below services and change how the controller works.
 
 const movingAveragesOfSalesService = async (
   sales: UnitTypes.IMiniUnit[],
@@ -39,6 +40,7 @@ const movingAveragesOfSalesService = async (
   return movingAverages;
 };
 
+// TODO: Add monthly and weekly growth rate calculation parameter
 const growthRateService = async (
   sales: UnitTypes.IMiniUnit[],
 ): Promise<LifecycleTypes.GrowthRateUnit[]> => {

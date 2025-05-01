@@ -1,4 +1,4 @@
-import { withController } from "../utils/with-controller";
+import { withController } from "../utils/express.utils";
 
 export namespace LifecycleTypes {
   export interface MovingAveragesUnit {

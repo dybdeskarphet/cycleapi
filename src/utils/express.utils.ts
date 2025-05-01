@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { ServiceError } from "../errors/service.error";
 import { StatusCodes } from "http-status-codes";
 
@@ -27,3 +27,16 @@ const handleControllerError = (
 };
 
 export { handleControllerError };
+
+export const withController = (
+  controllerFn: (req: Request, res: Response) => Promise<void>,
+) => {
+  return async (req: Request, res: Response) => {
+    try {
+      await controllerFn(req, res);
+    } catch (error) {
+      handleControllerError(res, error, true);
+      return;
+    }
+  };
+};

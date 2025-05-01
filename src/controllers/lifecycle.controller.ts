@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { withController } from "../utils/with-controller";
+import { withController } from "../utils/express.utils";
 import { getProductByIdService } from "../services/product.service";
-import { salesPerDayService } from "../services/sales.service";
 import { UnitTypes } from "../types/unit.types";
 import {
   growthRateService,
@@ -10,16 +9,18 @@ import {
 } from "../services/lifecycle.service";
 import { StatusCodes } from "http-status-codes";
 import { ServiceError } from "../errors/service.error";
+import { convertSalesDateRange } from "../utils/lifecycle.utils";
+import { Intervals } from "../types/global.types";
 
-// TODO: Split this to weighted and simple
+// TODO: Convert these to
+
 const getMovingAveragesController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
-    const salesByDay = await salesPerDayService(
-      product,
+    const salesByDay = await convertSalesDateRange(
       product.sales as UnitTypes.UnitDocument[],
+      Intervals.Daily,
     );
-
     let { windowSize, weight } = req.body;
 
     if (windowSize <= 0) {
@@ -60,9 +61,9 @@ const getGrowthRateController = withController(
       );
     }
 
-    const salesByDay = await salesPerDayService(
-      product,
+    const salesByDay = await convertSalesDateRange(
       product.sales as UnitTypes.UnitDocument[],
+      Intervals.Daily,
     );
 
     const growthRates = await growthRateService(salesByDay);
@@ -85,9 +86,9 @@ const getSalesAccelerationController = withController(
       );
     }
 
-    const salesByDay = await salesPerDayService(
-      product,
+    const salesByDay = await convertSalesDateRange(
       product.sales as UnitTypes.UnitDocument[],
+      Intervals.Daily,
     );
 
     const growthRates = await growthRateService(salesByDay);

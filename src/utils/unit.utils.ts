@@ -1,9 +1,4 @@
-import { ProductTypes } from "../types/product.types";
 import { UnitTypes } from "../types/unit.types";
-
-export const timeToDate = (fullDate: Date) => {
-  return fullDate.toISOString().slice(0, 10);
-};
 
 export const sortSalesByTime = (sales: UnitTypes.UnitDocument[]) => {
   return sales.sort(

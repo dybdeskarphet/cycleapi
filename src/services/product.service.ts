@@ -1,7 +1,7 @@
 import { ServiceError } from "../errors/service.error";
 import { Product } from "../models/product.model";
 import { ProductTypes } from "../types/product.types";
-import { validateAndReturnObjectId } from "../utils/id-validator";
+import { validateAndReturnObjectId } from "../utils/mongoose.utils";
 import { StatusCodes } from "http-status-codes";
 
 const getProductService = async (filters: Record<string, any> = {}) => {

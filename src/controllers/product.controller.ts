@@ -5,7 +5,7 @@ import {
   getProductByIdService,
   deleteProductService,
 } from "../services/product.service";
-import { withController } from "../utils/with-controller";
+import { withController } from "../utils/express.utils";
 import { StatusCodes } from "http-status-codes";
 
 const postProductController = withController(
