@@ -4,15 +4,16 @@ import { Request, Response } from "express";
 import { getProductByIdService } from "../services/product.service";
 import {
   createSaleService,
+  deleteAllSalesAndRestoreService,
   deleteSaleService,
   getSaleByIdService,
 } from "../services/sales.service";
 import { ServiceError } from "../errors/service.error";
-import { SaleDocument } from "../types/sale.types";
+import { RestoreSaleInputArraySchema, SaleDocument } from "../types/sale.types";
 import { convertSalesDateRange } from "../utils/sale.utils";
 import { isValidInterval } from "../utils/time.utils";
 
-const getSalesByProductIdController = withController(
+export const getSalesByProductIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
     let oldSales = product.sales as SaleDocument[];
@@ -38,7 +39,7 @@ const getSalesByProductIdController = withController(
   },
 );
 
-const postNewSaleController = withController(
+export const postNewSaleController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id);
     const sale = await createSaleService(product, req.body);
@@ -49,7 +50,7 @@ const postNewSaleController = withController(
   },
 );
 
-const deleteSaleByIdController = withController(
+export const deleteSaleByIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.productId);
     const sale = await getSaleByIdService(req.params.saleId);
@@ -60,8 +61,28 @@ const deleteSaleByIdController = withController(
   },
 );
 
-export {
-  deleteSaleByIdController,
-  postNewSaleController,
-  getSalesByProductIdController,
-};
+export const restoreOldSalesController = withController(
+  async (req: Request, res: Response) => {
+    const product = await getProductByIdService(req.params.productId, [
+      "sales",
+    ]);
+    const parseResult = RestoreSaleInputArraySchema.safeParse(req.body);
+
+    if (!parseResult.success) {
+      throw new ServiceError(
+        StatusCodes.BAD_REQUEST,
+        "Invalid request body:",
+        parseResult.error.issues,
+      );
+    }
+
+    const result = await deleteAllSalesAndRestoreService(
+      product,
+      parseResult.data,
+    );
+
+    res
+      .status(StatusCodes.OK)
+      .json({ message: `Sales are restored.`, data: { sales: result } });
+  },
+);
