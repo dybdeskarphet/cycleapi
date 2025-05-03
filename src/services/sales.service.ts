@@ -2,11 +2,15 @@ import { StatusCodes } from "http-status-codes";
 import { ServiceError } from "../errors/service.error";
 import { validateAndReturnObjectId } from "../utils/mongoose.utils";
 import { Types } from "mongoose";
-import { SaleDocument } from "../types/sale.types";
+import {
+  RestoreSaleInputArraySchemaType,
+  RestoreSaleInputSchemaType,
+  SaleDocument,
+} from "../types/sale.types";
 import { Sale } from "../models/sale.model";
 import { ProductDocument } from "../types/product.types";
 
-const getSaleByIdService = async (id: string): Promise<SaleDocument> => {
+export const getSaleByIdService = async (id: string): Promise<SaleDocument> => {
   const sale = await Sale.findById(validateAndReturnObjectId(id)).exec();
   if (!sale || !(sale instanceof Sale)) {
     throw new ServiceError(
@@ -18,7 +22,7 @@ const getSaleByIdService = async (id: string): Promise<SaleDocument> => {
   return sale;
 };
 
-const createSaleService = async (
+export const createSaleService = async (
   product: ProductDocument,
   unitProps: Record<string, any>,
 ) => {
@@ -29,7 +33,7 @@ const createSaleService = async (
   await product.save();
 };
 
-const deleteSaleService = async (
+export const deleteSaleService = async (
   product: ProductDocument,
   sale: SaleDocument,
 ) => {
@@ -56,4 +60,20 @@ const deleteSaleService = async (
   return deleteResult.deletedCount;
 };
 
-export { getSaleByIdService, createSaleService, deleteSaleService };
+export const deleteAllSalesAndRestoreService = async (
+  product: ProductDocument,
+  saleInputs: RestoreSaleInputArraySchemaType,
+) => {
+  await Sale.deleteMany({ _id: { $in: product.sales } });
+  const newSalesWithProductId = saleInputs.map((sale) => ({
+    product: product._id,
+    ...sale,
+  }));
+
+  const newSales = await Sale.insertMany(newSalesWithProductId);
+
+  product.sales = newSales.map((sale) => sale._id);
+  product.save();
+
+  return product.sales;
+};
