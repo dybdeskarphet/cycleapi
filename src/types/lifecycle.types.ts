@@ -14,3 +14,8 @@ export interface AccelerationUnit {
   acceleration: number;
   timestamp: string;
 }
+
+export interface LRegressionUnit {
+  slope: number;
+  timestamp: string;
+}
