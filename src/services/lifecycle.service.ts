@@ -3,15 +3,15 @@ import { ServiceError } from "../errors/service.error";
 import {
   calculateAverageSales,
   calculateWeightedAverageSales,
+  getLinearRegressionSlopeOfSales,
 } from "../utils/lifecycle.utils";
 import { IMiniSale } from "../types/sale.types";
 import {
   AccelerationUnit,
   GrowthRateUnit,
+  LRegressionUnit,
   MovingAveragesUnit,
 } from "../types/lifecycle.types";
-
-// TODO: Add interval option to all of the below services and change how the controller works.
 
 const movingAveragesOfSalesService = async (
   sales: IMiniSale[],
@@ -33,11 +33,6 @@ const movingAveragesOfSalesService = async (
       ? await calculateWeightedAverageSales(slice, windowSize)
       : await calculateAverageSales(slice, windowSize);
 
-    const averageDate = new Date(
-      slice.reduce((acc, val) => acc + Date.parse(val.createdAt), 0) /
-        windowSize,
-    ).toJSON();
-
     movingAverages.push({
       amount: averageAmount,
       timestamp: slice[slice.length - 1].createdAt,
@@ -47,7 +42,6 @@ const movingAveragesOfSalesService = async (
   return movingAverages;
 };
 
-// TODO: Add monthly and weekly growth rate calculation parameter
 const growthRateService = async (
   sales: IMiniSale[],
 ): Promise<GrowthRateUnit[]> => {
@@ -80,6 +74,33 @@ const salesAccelerationService = async (
   }
 
   return accelerationRates;
+};
+
+export const movingLinearRegressionSlopeService = async (
+  sales: IMiniSale[],
+  windowSize: number,
+  interval: string,
+) => {
+  if (windowSize > sales.length) {
+    throw new ServiceError(
+      StatusCodes.BAD_REQUEST,
+      "Window size of moving linear regression can't be larger than the length of sales.",
+    );
+  }
+
+  let linearRegressionSlopes: LRegressionUnit[] = [];
+
+  for (let i = 0; i <= sales.length - windowSize; i++) {
+    let slice = sales.slice(i, i + windowSize);
+    let slope = await getLinearRegressionSlopeOfSales(slice, interval);
+
+    linearRegressionSlopes.push({
+      slope,
+      timestamp: slice[slice.length - 1].createdAt,
+    });
+  }
+
+  return linearRegressionSlopes;
 };
 
 export {
