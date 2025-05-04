@@ -9,7 +9,7 @@ const ProductSchema = new mongoose.Schema<IProduct>(
     launchDate: { type: Date, required: true },
     price: { type: Number, required: true },
     region: { type: String, enum: Region, default: Region.TURKIYE },
-    sales: [{ type: mongoose.Schema.Types.ObjectId, ref: "Sale" }],
+    sales: [{ type: Schema.Types.ObjectId, ref: "Sale" }],
   },
   { timestamps: true },
 );
