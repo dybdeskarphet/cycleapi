@@ -32,7 +32,7 @@ app.use(
 );
 
 app.get("/", (req: Request, res: Response) => {
-  // TODO: Change it to /api/v1 before release.
+  // NOTE: Change it to /api/v1 before release.
   res.redirect("/api-docs");
 });
 app.get("/api/v1", (req: Request, res: Response) => {
