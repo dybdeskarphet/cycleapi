@@ -4,6 +4,7 @@ import { getProductByIdService } from "../services/product.service";
 import {
   growthRateService,
   movingAveragesOfSalesService,
+  movingLinearRegressionSlopeService,
   salesAccelerationService,
 } from "../services/lifecycle.service";
 import { StatusCodes } from "http-status-codes";
@@ -12,8 +13,6 @@ import { Intervals } from "../enums/intervals.enum";
 import { SaleDocument } from "../types/sale.types";
 import { convertSalesDateRange } from "../utils/sale.utils";
 import { errorIfInvalidInterval, isValidInterval } from "../utils/time.utils";
-
-// TODO: Convert these to
 
 const getMovingAveragesController = withController(
   async (req: Request, res: Response) => {
@@ -91,6 +90,39 @@ const getSalesAccelerationController = withController(
     res.status(StatusCodes.OK).json({
       message: `Acceleration rates of ${product.name} is listed.`,
       data: { accelerations },
+    });
+  },
+);
+
+export const getMovingLinearRegressionSlopesController = withController(
+  async (req: Request, res: Response) => {
+    let { windowSize, weight, interval } = req.body;
+
+    await errorIfInvalidInterval(interval);
+
+    if (windowSize <= 0) {
+      throw new ServiceError(
+        StatusCodes.BAD_REQUEST,
+        "'windowSize' value should be larger than 0.",
+      );
+    }
+
+    const product = await getProductByIdService(req.params.id, ["sales"]);
+
+    const salesInterval = await convertSalesDateRange(
+      product.sales as SaleDocument[],
+      interval,
+    );
+
+    const slopes = await movingLinearRegressionSlopeService(
+      salesInterval,
+      windowSize,
+      interval,
+    );
+
+    res.status(StatusCodes.OK).json({
+      message: `Linear regression slopes of ${product.name} is listed.`,
+      data: { slopes },
     });
   },
 );
