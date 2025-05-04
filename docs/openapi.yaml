@@ -262,3 +262,29 @@ paths:
           description: Acceleration rates are listed.
       tags:
         - Lifecycle
+  /lifecycle/{productId}/lr-slopes:
+    post:
+      summary: Get the linear regression of sales of a product
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+          description: The ID of the product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                windowSize:
+                  type: number
+                interval:
+                  type: string
+      responses:
+        201:
+          description: Linear regression slopes are listed.
+      tags:
+        - Lifecycle
