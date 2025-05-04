@@ -1,4 +1,4 @@
-import { getISOWeek, getISOWeekYear } from "date-fns";
+import { addWeeks, getISOWeek, getISOWeekYear, startOfISOWeek } from "date-fns";
 import { Intervals } from "../enums/intervals.enum";
 import { IMiniSale, SaleDocument } from "../types/sale.types";
 import { ServiceError } from "../errors/service.error";
@@ -50,6 +50,26 @@ export function getWeekWithType<T extends "string" | "number">(
     return parseInt(`${year}${String(week).padStart(2, "0")}`, 10) as any;
   }
 }
+
+export const convertIntervalDateToISODate = (
+  intervalDate: string,
+  interval: string,
+) => {
+  switch (interval) {
+    case "weekly":
+      const [year, week] = intervalDate.split("-W");
+      const startOfYear = new Date(`${year}-01-01`);
+      const date = addWeeks(startOfISOWeek(startOfYear), parseInt(week) - 1);
+      return date.toISOString().slice(0, 10);
+    case "yearly":
+    case "monthly":
+      return new Date(intervalDate).toISOString().slice(0, 10);
+    case "daily":
+      return intervalDate;
+    default:
+      break;
+  }
+};
 
 export const timeToDate = (fullDate: Date, type: string): string => {
   switch (type) {
