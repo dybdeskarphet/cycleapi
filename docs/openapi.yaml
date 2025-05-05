@@ -288,3 +288,31 @@ paths:
           description: Linear regression slopes are listed.
       tags:
         - Lifecycle
+  /lifecycle/{productId}/phases-with-lr:
+    post:
+      summary: Get the phases of the product using linear regression slopes of sales
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+          description: The ID of the product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                windowSize:
+                  type: number
+                interval:
+                  type: string
+                sensitivity:
+                  type: number
+      responses:
+        201:
+          description: Linear regression slopes are listed.
+      tags:
+        - Lifecycle
