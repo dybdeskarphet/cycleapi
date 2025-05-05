@@ -19,3 +19,9 @@ export interface LRegressionUnit {
   slope: number;
   timestamp: string;
 }
+
+export interface LRegressionPhaseUnit {
+  slope: number;
+  phase: string;
+  timestamp: string;
+}
