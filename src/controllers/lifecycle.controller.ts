@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { withController } from "../utils/express.utils";
 import { getProductByIdService } from "../services/product.service";
 import {
+  groupedLinearRegressionSlopeService,
   growthRateService,
   movingAveragesOfSalesService,
   movingLinearRegressionSlopeService,
@@ -14,7 +15,7 @@ import { SaleDocument } from "../types/sale.types";
 import { convertSalesDateRange } from "../utils/sale.utils";
 import { errorIfInvalidInterval, isValidInterval } from "../utils/time.utils";
 
-const getMovingAveragesController = withController(
+export const getMovingAveragesController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
     let { windowSize, weight, interval } = req.body;
@@ -53,7 +54,7 @@ const getMovingAveragesController = withController(
   },
 );
 
-const getGrowthRateController = withController(
+export const getGrowthRateController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
     const { interval } = req.body;
@@ -73,7 +74,7 @@ const getGrowthRateController = withController(
   },
 );
 
-const getSalesAccelerationController = withController(
+export const getSalesAccelerationController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
     const { interval } = req.body;
@@ -127,8 +128,48 @@ export const getMovingLinearRegressionSlopesController = withController(
   },
 );
 
-export {
-  getMovingAveragesController,
-  getGrowthRateController,
-  getSalesAccelerationController,
-};
+export const getGroupedLinearRegressionSlopesController = withController(
+  async (req: Request, res: Response) => {
+    let { windowSize, weight, interval, sensitivity } = req.body;
+
+    await errorIfInvalidInterval(interval);
+
+    if (windowSize <= 0) {
+      throw new ServiceError(
+        StatusCodes.BAD_REQUEST,
+        "'windowSize' value should be larger than 0.",
+      );
+    }
+
+    if (
+      !sensitivity ||
+      typeof sensitivity !== "number" ||
+      sensitivity < 0 ||
+      sensitivity > 1
+    ) {
+      throw new ServiceError(
+        StatusCodes.BAD_REQUEST,
+        "'sensitivity' value should be between 0 and 1.",
+      );
+    }
+
+    const product = await getProductByIdService(req.params.id, ["sales"]);
+
+    const salesInterval = await convertSalesDateRange(
+      product.sales as SaleDocument[],
+      interval,
+    );
+
+    const slopes = await groupedLinearRegressionSlopeService(
+      salesInterval,
+      windowSize,
+      interval,
+      sensitivity,
+    );
+
+    res.status(StatusCodes.OK).json({
+      message: `Linear regression slopes of ${product.name} is listed.`,
+      data: { slopes },
+    });
+  },
+);
