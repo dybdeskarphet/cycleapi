@@ -1,28 +1,26 @@
 import { differenceInDays, parseISO } from "date-fns";
 import { IMiniSale } from "../types/sale.types";
 import { convertIntervalDateToISODate } from "./time.utils";
+import { LRegressionPhaseUnit } from "../types/lifecycle.types";
 
 export const calculateWeightedAverageSales = async (
   slice: IMiniSale[],
-  length: number,
 ): Promise<number> => {
   return (
     slice.reduce((acc, val, index) => {
       const weightFactor = index + 1;
       return acc + val.amount * weightFactor;
     }, 0) /
-    ((length * (length + 1)) / 2)
+    ((slice.length * (slice.length + 1)) / 2)
   );
 };
 
 export const calculateAverageSales = async (
   slice: IMiniSale[],
-  length: number,
 ): Promise<number> => {
-  return slice.reduce((acc, val) => acc + val.amount, 0) / length;
+  return slice.reduce((acc, val) => acc + val.amount, 0) / slice.length;
 };
 
-// TODO: You can just use a single for loop
 export const getLinearRegressionSlopeOfSales = async (
   sales: IMiniSale[],
   interval: string,
@@ -64,4 +62,14 @@ export const getLinearRegressionSlopeOfSales = async (
   }
 
   return sxy / sxx;
+};
+
+export const getStandardDeviationOfSlopes = async (
+  slopes: LRegressionPhaseUnit[],
+) => {
+  const n = slopes.length;
+  const mean = slopes.reduce((a, b) => a + b.slope, 0) / n;
+  return Math.sqrt(
+    slopes.map((x) => Math.pow(x.slope - mean, 2)).reduce((a, b) => a + b) / n,
+  );
 };
