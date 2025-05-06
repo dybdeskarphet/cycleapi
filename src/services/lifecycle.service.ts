@@ -8,18 +8,16 @@ import {
 } from "../utils/lifecycle.utils";
 import { IMiniSale } from "../types/sale.types";
 import {
-  AccelerationUnit,
-  GrowthRateUnit,
-  LRegressionPhaseUnit,
-  LRegressionUnit,
-  MovingAveragesUnit,
+  GrowthRate,
+  LRegression,
+  MovingAverages,
 } from "../types/lifecycle.types";
 
 export const movingAveragesOfSalesService = async (
   sales: IMiniSale[],
   windowSize: number,
   weight: boolean,
-): Promise<MovingAveragesUnit[]> => {
+): Promise<MovingAverages.Unit[]> => {
   if (windowSize > sales.length) {
     throw new ServiceError(
       StatusCodes.BAD_REQUEST,
@@ -27,7 +25,7 @@ export const movingAveragesOfSalesService = async (
     );
   }
 
-  let movingAverages: MovingAveragesUnit[] = [];
+  let movingAverages: MovingAverages.Unit[] = [];
 
   for (let i = 0; i <= sales.length - windowSize; i++) {
     let slice = sales.slice(i, i + windowSize);
@@ -46,8 +44,8 @@ export const movingAveragesOfSalesService = async (
 
 export const growthRateService = async (
   sales: IMiniSale[],
-): Promise<GrowthRateUnit[]> => {
-  let growthRates: GrowthRateUnit[] = [];
+): Promise<GrowthRate.Unit[]> => {
+  let growthRates: GrowthRate.Unit[] = [];
 
   for (let i = 1; i < sales.length; i++) {
     const growth =
@@ -63,9 +61,9 @@ export const growthRateService = async (
 };
 
 export const salesAccelerationService = async (
-  growthRates: GrowthRateUnit[],
-): Promise<AccelerationUnit[]> => {
-  let accelerationRates: AccelerationUnit[] = [];
+  growthRates: GrowthRate.Unit[],
+): Promise<GrowthRate.AccelerationUnit[]> => {
+  let accelerationRates: GrowthRate.AccelerationUnit[] = [];
 
   for (let i = 1; i < growthRates.length; i++) {
     const acceleration = growthRates[i].rate - growthRates[i - 1].rate;
@@ -90,7 +88,7 @@ export const movingLinearRegressionSlopeService = async (
     );
   }
 
-  let linearRegressionSlopes: LRegressionUnit[] = [];
+  let linearRegressionSlopes: LRegression.Unit[] = [];
 
   for (let i = 0; i <= sales.length - windowSize; i++) {
     let slice = sales.slice(i, i + windowSize);
@@ -118,7 +116,7 @@ export const groupedLinearRegressionSlopeService = async (
     );
   }
 
-  let linearRegressionSlopes: LRegressionPhaseUnit[] = [];
+  let linearRegressionSlopes: LRegression.PhaseUnit[] = [];
 
   for (let i = 0; i < sales.length; i += windowSize) {
     let slice = sales.slice(i, i + windowSize);

@@ -1,6 +1,12 @@
 import { ServiceError } from "../errors/service.error";
 import { Product } from "../models/product.model";
-import { ProductDocument, ProductInput } from "../types/product.types";
+import {
+  ProductDocument,
+  ProductPopulatableFields,
+  ProductRequestBody,
+  ZodProductPopulatableFields,
+} from "../types/product.types";
+import { handleZodParsed } from "../utils/express.utils";
 import { validateAndReturnObjectId } from "../utils/mongoose.utils";
 import { StatusCodes } from "http-status-codes";
 
@@ -18,11 +24,16 @@ const getProductService = async (filters: Record<string, any> = {}) => {
 
 const getProductByIdService = async (
   id: string,
-  populateFields: string[] = [],
+  populateFields: ProductPopulatableFields = [],
 ): Promise<ProductDocument> => {
+  const populatable = handleZodParsed(
+    ZodProductPopulatableFields.safeParse(populateFields),
+  );
+
   const product = await Product.findById(validateAndReturnObjectId(id))
-    .populate(populateFields)
+    .populate(populatable)
     .exec();
+
   if (!product || !(product instanceof Product)) {
     throw new ServiceError(
       StatusCodes.NOT_FOUND,
@@ -33,17 +44,9 @@ const getProductByIdService = async (
   return product;
 };
 
-const createProductService = async (productInput: ProductInput) => {
-  if (!productInput) {
-    throw new ServiceError(
-      StatusCodes.BAD_REQUEST,
-      "Product details are needed.",
-    );
-  }
-
-  const newProduct = new Product(productInput);
+const createProductService = async (productRequestBody: ProductRequestBody) => {
+  const newProduct = new Product(productRequestBody);
   await newProduct.save();
-
   return newProduct;
 };
 

@@ -6,12 +6,14 @@ import {
   RestoreSaleInputArraySchemaType,
   RestoreSaleInputSchemaType,
   SaleDocument,
+  SaleRequestBody,
 } from "../types/sale.types";
 import { Sale } from "../models/sale.model";
 import { ProductDocument } from "../types/product.types";
 
 export const getSaleByIdService = async (id: string): Promise<SaleDocument> => {
   const sale = await Sale.findById(validateAndReturnObjectId(id)).exec();
+
   if (!sale || !(sale instanceof Sale)) {
     throw new ServiceError(
       StatusCodes.NOT_FOUND,
@@ -24,9 +26,9 @@ export const getSaleByIdService = async (id: string): Promise<SaleDocument> => {
 
 export const createSaleService = async (
   product: ProductDocument,
-  unitProps: Record<string, any>,
+  requestBody: SaleRequestBody,
 ) => {
-  const unit = new Sale({ product: product._id, ...unitProps });
+  const unit = new Sale({ product: product._id, ...requestBody });
   await unit.save();
 
   product.sales.push(unit._id as Types.ObjectId);

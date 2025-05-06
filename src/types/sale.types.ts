@@ -1,6 +1,15 @@
 import { Types, HydratedDocument } from "mongoose";
-import { ProductDocument } from "./product.types";
 import { z } from "zod";
+import { Product } from "../models/product.model";
+import { ProductDocument } from "./product.types";
+
+export const ZodISale = z.object({
+  product: z.instanceof(Types.ObjectId).or(z.instanceof(Product)),
+  amount: z.number().min(1),
+  customPrice: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
 
 export interface ISale {
   product: Types.ObjectId | ProductDocument;
@@ -10,10 +19,23 @@ export interface ISale {
   updatedAt: Date;
 }
 
-export interface IMiniSale {
-  amount: number;
-  createdAt: string;
-}
+export const ZodSaleRequestBody = z.object({
+  amount: z.number().min(1),
+  customPrice: z.number().min(1).optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+});
+
+export type SaleRequestBody = z.infer<typeof ZodSaleRequestBody>;
+
+export type SaleDocument = HydratedDocument<ISale>;
+
+export const ZodIMiniSale = z.object({
+  amount: z.number(),
+  createdAt: z.string(),
+});
+
+export type IMiniSale = z.infer<typeof ZodIMiniSale>;
 
 export const RestoreSaleInputSchema = z
   .object({
@@ -32,5 +54,3 @@ export type RestoreSaleInputSchemaType = z.infer<typeof RestoreSaleInputSchema>;
 export type RestoreSaleInputArraySchemaType = z.infer<
   typeof RestoreSaleInputArraySchema
 >;
-
-export type SaleDocument = HydratedDocument<ISale>;

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { withController } from "../utils/express.utils";
+import { handleZodParsed, withController } from "../utils/express.utils";
 import { getProductByIdService } from "../services/product.service";
 import {
   groupedLinearRegressionSlopeService,
@@ -9,42 +9,28 @@ import {
   salesAccelerationService,
 } from "../services/lifecycle.service";
 import { StatusCodes } from "http-status-codes";
-import { ServiceError } from "../errors/service.error";
-import { Intervals } from "../enums/intervals.enum";
 import { SaleDocument } from "../types/sale.types";
 import { convertSalesDateRange } from "../utils/sale.utils";
-import { errorIfInvalidInterval, isValidInterval } from "../utils/time.utils";
+import {
+  GrowthRate,
+  LRegression,
+  MovingAverages,
+} from "../types/lifecycle.types";
 
 export const getMovingAveragesController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
-    let { windowSize, weight, interval } = req.body;
-
-    await errorIfInvalidInterval(interval);
+    let data = handleZodParsed(MovingAverages.RequestBody.safeParse(req.body));
 
     const salesInterval = await convertSalesDateRange(
       product.sales as SaleDocument[],
-      interval,
+      data.interval,
     );
-
-    if (windowSize <= 0) {
-      throw new ServiceError(
-        StatusCodes.BAD_REQUEST,
-        "'windowSize' value should be larger than 0.",
-      );
-    }
-
-    if (typeof weight !== "boolean") {
-      throw new ServiceError(
-        StatusCodes.BAD_REQUEST,
-        "'weight' value should be boolean.",
-      );
-    }
 
     const averages = await movingAveragesOfSalesService(
       salesInterval,
-      windowSize,
-      weight,
+      data.windowSize,
+      data.weight,
     );
 
     res.status(StatusCodes.OK).json({
@@ -57,12 +43,11 @@ export const getMovingAveragesController = withController(
 export const getGrowthRateController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
-    const { interval } = req.body;
-    await errorIfInvalidInterval(interval);
+    const data = handleZodParsed(GrowthRate.RequestBody.safeParse(req.body));
 
     const salesInterval = await convertSalesDateRange(
       product.sales as SaleDocument[],
-      interval,
+      data.interval,
     );
 
     const growthRates = await growthRateService(salesInterval);
@@ -77,12 +62,11 @@ export const getGrowthRateController = withController(
 export const getSalesAccelerationController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
-    const { interval } = req.body;
-    await errorIfInvalidInterval(interval);
+    const data = handleZodParsed(GrowthRate.RequestBody.safeParse(req.body));
 
     const salesInterval = await convertSalesDateRange(
       product.sales as SaleDocument[],
-      interval,
+      data.interval,
     );
 
     const growthRates = await growthRateService(salesInterval);
@@ -97,28 +81,17 @@ export const getSalesAccelerationController = withController(
 
 export const getMovingLinearRegressionSlopesController = withController(
   async (req: Request, res: Response) => {
-    let { windowSize, weight, interval } = req.body;
-
-    await errorIfInvalidInterval(interval);
-
-    if (windowSize <= 0) {
-      throw new ServiceError(
-        StatusCodes.BAD_REQUEST,
-        "'windowSize' value should be larger than 0.",
-      );
-    }
-
+    const data = handleZodParsed(LRegression.RequestBody.safeParse(req.body));
     const product = await getProductByIdService(req.params.id, ["sales"]);
-
     const salesInterval = await convertSalesDateRange(
       product.sales as SaleDocument[],
-      interval,
+      data.interval,
     );
 
     const slopes = await movingLinearRegressionSlopeService(
       salesInterval,
-      windowSize,
-      interval,
+      data.windowSize,
+      data.interval,
     );
 
     res.status(StatusCodes.OK).json({
@@ -130,28 +103,9 @@ export const getMovingLinearRegressionSlopesController = withController(
 
 export const getGroupedLinearRegressionSlopesController = withController(
   async (req: Request, res: Response) => {
-    let { windowSize, weight, interval, sensitivity } = req.body;
-
-    await errorIfInvalidInterval(interval);
-
-    if (windowSize <= 0) {
-      throw new ServiceError(
-        StatusCodes.BAD_REQUEST,
-        "'windowSize' value should be larger than 0.",
-      );
-    }
-
-    if (
-      !sensitivity ||
-      typeof sensitivity !== "number" ||
-      sensitivity < 0 ||
-      sensitivity > 1
-    ) {
-      throw new ServiceError(
-        StatusCodes.BAD_REQUEST,
-        "'sensitivity' value should be between 0 and 1.",
-      );
-    }
+    const { windowSize, interval, sensitivity } = handleZodParsed(
+      LRegression.RequestBodyWithSensitivity.safeParse(req.body),
+    );
 
     const product = await getProductByIdService(req.params.id, ["sales"]);
 

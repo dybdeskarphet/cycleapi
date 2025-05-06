@@ -1,7 +1,7 @@
 import { differenceInDays, parseISO } from "date-fns";
 import { IMiniSale } from "../types/sale.types";
 import { convertIntervalDateToISODate } from "./time.utils";
-import { LRegressionPhaseUnit } from "../types/lifecycle.types";
+import { LRegression } from "../types/lifecycle.types";
 
 export const calculateWeightedAverageSales = async (
   slice: IMiniSale[],
@@ -65,7 +65,7 @@ export const getLinearRegressionSlopeOfSales = async (
 };
 
 export const getStandardDeviationOfSlopes = async (
-  slopes: LRegressionPhaseUnit[],
+  slopes: LRegression.PhaseUnit[],
 ) => {
   const n = slopes.length;
   const mean = slopes.reduce((a, b) => a + b.slope, 0) / n;

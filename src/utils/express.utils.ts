@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { ServiceError } from "../errors/service.error";
 import { StatusCodes } from "http-status-codes";
+import { SafeParseReturnType } from "zod";
 
 export const handleControllerError = (
   res: Response,
@@ -37,4 +38,18 @@ export const withController = (
       return;
     }
   };
+};
+
+export const handleZodParsed = <Input, Output = Input>(
+  parsed: SafeParseReturnType<Input, Output>,
+): Output => {
+  if (!parsed.success) {
+    throw new ServiceError(
+      StatusCodes.BAD_REQUEST,
+      "Check your request body.",
+      parsed.error.issues,
+    );
+  }
+
+  return parsed.data;
 };

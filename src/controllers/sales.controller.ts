@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { withController } from "../utils/express.utils";
+import { handleZodParsed, withController } from "../utils/express.utils";
 import { Request, Response } from "express";
 import { getProductByIdService } from "../services/product.service";
 import {
@@ -9,25 +9,35 @@ import {
   getSaleByIdService,
 } from "../services/sales.service";
 import { ServiceError } from "../errors/service.error";
-import { RestoreSaleInputArraySchema, SaleDocument } from "../types/sale.types";
+import {
+  RestoreSaleInputArraySchema,
+  SaleDocument,
+  ZodSaleRequestBody,
+} from "../types/sale.types";
 import { convertSalesDateRange } from "../utils/sale.utils";
 import { isValidInterval } from "../utils/time.utils";
+import {
+  Intervals,
+  IntervalsWithInstant,
+  IntervalsWithInstantSchema,
+} from "../enums/intervals.enum";
 
 export const getSalesByProductIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
     let oldSales = product.sales as SaleDocument[];
     let sales = [];
-    let interval = req.params.interval;
+    let interval = handleZodParsed(
+      IntervalsWithInstantSchema.safeParse(req.params),
+    );
 
-    if (isValidInterval(interval)) {
-      sales = await convertSalesDateRange(oldSales, interval);
-    } else if (interval === "instant") {
+    if (interval === IntervalsWithInstant.Instant) {
       sales = oldSales;
     } else {
-      throw new ServiceError(
-        StatusCodes.BAD_REQUEST,
-        "Interval should be 'daily', 'weekly', 'monthly', 'yearly' or 'instant'",
+      sales = await convertSalesDateRange(
+        oldSales,
+        // NOTE: I had to do this, I know this looks ugly but I only use instant here and noweher else
+        interval as unknown as Intervals,
       );
     }
 
@@ -42,7 +52,9 @@ export const getSalesByProductIdController = withController(
 export const postNewSaleController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id);
-    const sale = await createSaleService(product, req.body);
+    const body = handleZodParsed(ZodSaleRequestBody.safeParse(req.body));
+    const sale = await createSaleService(product, body);
+
     res
       .status(StatusCodes.CREATED)
       .json({ message: "New sale created.", data: { sale } });

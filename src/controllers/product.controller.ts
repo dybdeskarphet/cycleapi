@@ -5,12 +5,14 @@ import {
   getProductByIdService,
   deleteProductService,
 } from "../services/product.service";
-import { withController } from "../utils/express.utils";
+import { handleZodParsed, withController } from "../utils/express.utils";
 import { StatusCodes } from "http-status-codes";
+import { ZodProductRequestBody } from "../types/product.types";
 
 const postProductController = withController(
   async (req: Request, res: Response) => {
-    const product = await createProductService(req.body);
+    const data = handleZodParsed(ZodProductRequestBody.safeParse(req.body));
+    const product = await createProductService(data);
     res
       .status(StatusCodes.CREATED)
       .json({ message: "Product created.", data: { product } });
