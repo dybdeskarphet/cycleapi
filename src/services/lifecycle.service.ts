@@ -130,12 +130,23 @@ export const groupedLinearRegressionSlopeService = async (
 
   let x =
     (await getStandardDeviationOfSlopes(linearRegressionSlopes)) * sensitivity;
+  let epsilon = 0;
 
   for (let i = 0; i < linearRegressionSlopes.length; i++) {
     const slope = linearRegressionSlopes[i].slope;
-    let phase = slope > x ? "growth" : slope < x ? "decline" : "maturity";
+    epsilon = 0.5 * x;
+    let phase =
+      Math.abs(slope - x) < epsilon
+        ? "maturity"
+        : slope > x
+          ? "growth"
+          : "decline";
     linearRegressionSlopes[i].phase = phase;
   }
 
-  return linearRegressionSlopes;
+  return {
+    slopes: linearRegressionSlopes,
+    maturity_top: x + epsilon,
+    maturity_bottom: x - epsilon,
+  };
 };

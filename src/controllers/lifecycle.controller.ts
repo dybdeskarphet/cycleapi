@@ -114,7 +114,7 @@ export const getGroupedLinearRegressionSlopesController = withController(
       interval,
     );
 
-    const slopes = await groupedLinearRegressionSlopeService(
+    const result = await groupedLinearRegressionSlopeService(
       salesInterval,
       windowSize,
       interval,
@@ -123,7 +123,11 @@ export const getGroupedLinearRegressionSlopesController = withController(
 
     res.status(StatusCodes.OK).json({
       message: `Linear regression slopes of ${product.name} is listed.`,
-      data: { slopes },
+      data: {
+        maturity_top: result.maturity_top,
+        maturity_bottom: result.maturity_bottom,
+        slopes: result.slopes,
+      },
     });
   },
 );
