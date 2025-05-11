@@ -15,7 +15,6 @@ import {
   ZodSaleRequestBody,
 } from "../types/sale.types";
 import { convertSalesDateRange } from "../utils/sale.utils";
-import { isValidInterval } from "../utils/time.utils";
 import {
   Intervals,
   IntervalsWithInstant,
@@ -28,7 +27,7 @@ export const getSalesByProductIdController = withController(
     let oldSales = product.sales as SaleDocument[];
     let sales = [];
     let interval = handleZodParsed(
-      IntervalsWithInstantSchema.safeParse(req.params),
+      IntervalsWithInstantSchema.safeParse(req.params.interval),
     );
 
     if (interval === IntervalsWithInstant.Instant) {
@@ -43,7 +42,9 @@ export const getSalesByProductIdController = withController(
 
     res.status(StatusCodes.OK).json({
       message: `All sales are listed for ${product.name}.`,
-      data: sales,
+      data: {
+        sales: sales,
+      },
     });
     return;
   },
