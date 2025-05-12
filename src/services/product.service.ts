@@ -2,6 +2,7 @@ import { ServiceError } from "../errors/service.error";
 import { Product } from "../models/product.model";
 import {
   ProductDocument,
+  ProductFilterBody,
   ProductPopulatableFields,
   ProductRequestBody,
   ZodProductPopulatableFields,
@@ -10,7 +11,7 @@ import { handleZodParsed } from "../utils/express.utils";
 import { validateAndReturnObjectId } from "../utils/mongoose.utils";
 import { StatusCodes } from "http-status-codes";
 
-const getProductService = async (filters: Record<string, any> = {}) => {
+const getProductService = async (filters: ProductFilterBody = {}) => {
   const result = await Product.find(filters).exec();
   if (!result) {
     throw new ServiceError(
