@@ -1,5 +1,9 @@
 import { StatusCodes } from "http-status-codes";
-import { handleZodParsed, withController } from "../utils/express.utils";
+import {
+  handleZodParsed,
+  sendSuccess,
+  withController,
+} from "../utils/express.utils";
 import { Request, Response } from "express";
 import { getProductByIdService } from "../services/product.service";
 import {
@@ -19,6 +23,7 @@ import {
   IntervalsWithInstant,
   IntervalsWithInstantSchema,
 } from "../enums/intervals.enum";
+import { SuccessMessages } from "../enums/messages.enum";
 
 export const getSalesByProductIdController = withController(
   async (req: Request, res: Response) => {
@@ -37,12 +42,14 @@ export const getSalesByProductIdController = withController(
             interval as unknown as Intervals,
           );
 
-    res.status(StatusCodes.OK).json({
-      message: `All sales are listed for ${product.name}.`,
-      data: {
-        sales: sales,
+    sendSuccess(
+      res,
+      {
+        product: { _id: product._id, name: product.name },
+        sales,
       },
-    });
+      SuccessMessages.SALE_LISTED,
+    );
   },
 );
 
@@ -52,9 +59,15 @@ export const postNewSaleController = withController(
     const body = handleZodParsed(ZodSaleRequestBody.safeParse(req.body));
     const sale = await createSaleService(product, body);
 
-    res
-      .status(StatusCodes.CREATED)
-      .json({ message: "New sale created.", data: { sale } });
+    sendSuccess(
+      res,
+      {
+        product: { _id: product._id, name: product.name },
+        sale,
+      },
+      SuccessMessages.SALE_CREATED,
+      StatusCodes.CREATED,
+    );
   },
 );
 
@@ -64,26 +77,28 @@ export const deleteSaleByIdController = withController(
     const sale = await getSaleByIdService(req.params.saleId);
     const deleteCount = await deleteSaleService(product, sale);
 
-    res
-      .status(StatusCodes.OK)
-      .json({ message: `${deleteCount} sale(s) deleted.`, data: { sale } });
+    sendSuccess(
+      res,
+      {
+        product: { _id: product._id, name: product.name },
+        sale,
+      },
+      SuccessMessages.SALE_DELETED,
+    );
   },
 );
 
 export const restoreOldSalesController = withController(
   async (req: Request, res: Response) => {
-    const product = await getProductByIdService(req.params.productId, [
-      "sales",
-    ]);
-
     const body = handleZodParsed(
       RestoreSaleInputArraySchema.safeParse(req.body),
     );
 
-    const result = await deleteAllSalesAndRestoreService(product, body);
+    const product = await getProductByIdService(req.params.productId, [
+      "sales",
+    ]);
 
-    res
-      .status(StatusCodes.OK)
-      .json({ message: `Sales are restored.`, data: { sales: result } });
+    const result = await deleteAllSalesAndRestoreService(product, body);
+    sendSuccess(res, { sales: result }, SuccessMessages.SALE_RESTORED);
   },
 );

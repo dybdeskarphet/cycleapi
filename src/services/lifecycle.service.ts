@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { ServiceError } from "../errors/service.error";
+import { ApiError } from "../errors/api.error";
 import {
   calculateAverageSales,
   calculateWeightedAverageSales,
@@ -12,6 +12,7 @@ import {
   LRegression,
   MovingAverages,
 } from "../types/lifecycle.types";
+import { ErrorMessages } from "../enums/messages.enum";
 
 export const movingAveragesOfSalesService = async (
   sales: IMiniSale[],
@@ -19,9 +20,9 @@ export const movingAveragesOfSalesService = async (
   weight: boolean,
 ): Promise<MovingAverages.Unit[]> => {
   if (windowSize > sales.length) {
-    throw new ServiceError(
+    throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      "Window size of moving averages can't be larger than the length of sales.",
+      ErrorMessages.WINDOW_SIZE_INCOMPATIBLE_LENGTH,
     );
   }
 
@@ -82,9 +83,9 @@ export const movingLinearRegressionSlopeService = async (
   interval: string,
 ) => {
   if (windowSize > sales.length) {
-    throw new ServiceError(
+    throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      "Window size of moving linear regression can't be larger than the length of sales.",
+      ErrorMessages.WINDOW_SIZE_INCOMPATIBLE_LENGTH,
     );
   }
 
@@ -110,9 +111,9 @@ export const groupedLinearRegressionSlopeService = async (
   sensitivity: number,
 ) => {
   if (windowSize > sales.length) {
-    throw new ServiceError(
+    throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      "Window size of moving linear regression can't be larger than the length of sales.",
+      ErrorMessages.WINDOW_SIZE_INCOMPATIBLE_LENGTH,
     );
   }
 

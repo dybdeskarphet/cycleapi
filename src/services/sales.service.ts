@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { ServiceError } from "../errors/service.error";
+import { ApiError } from "../errors/api.error";
 import { validateAndReturnObjectId } from "../utils/mongoose.utils";
 import { Types } from "mongoose";
 import {
@@ -10,15 +10,13 @@ import {
 } from "../types/sale.types";
 import { Sale } from "../models/sale.model";
 import { ProductDocument } from "../types/product.types";
+import { ErrorMessages } from "../enums/messages.enum";
 
 export const getSaleByIdService = async (id: string): Promise<SaleDocument> => {
   const sale = await Sale.findById(validateAndReturnObjectId(id)).exec();
 
   if (!sale || !(sale instanceof Sale)) {
-    throw new ServiceError(
-      StatusCodes.NOT_FOUND,
-      "Couldn't find any sale by this ID.",
-    );
+    throw new ApiError(StatusCodes.NOT_FOUND, ErrorMessages.NO_SALE);
   }
 
   return sale;
@@ -49,9 +47,9 @@ export const deleteSaleService = async (
         console.error(
           "deleteSaleService: Don't populate the sales field of the product in the controller.",
         );
-        throw new ServiceError(
+        throw new ApiError(
           StatusCodes.INTERNAL_SERVER_ERROR,
-          "Internal server error.",
+          ErrorMessages.INTERNAL_SERVER_ERROR,
         );
       }
       return !(id as Types.ObjectId).equals(sale._id);

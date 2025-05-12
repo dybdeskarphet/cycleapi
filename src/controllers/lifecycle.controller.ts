@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { handleZodParsed, withController } from "../utils/express.utils";
+import {
+  handleZodParsed,
+  sendSuccess,
+  withController,
+} from "../utils/express.utils";
 import { getProductByIdService } from "../services/product.service";
 import {
   groupedLinearRegressionSlopeService,
@@ -16,6 +20,7 @@ import {
   LRegression,
   MovingAverages,
 } from "../types/lifecycle.types";
+import { SuccessMessages } from "../enums/messages.enum";
 
 export const getMovingAveragesController = withController(
   async (req: Request, res: Response) => {
@@ -33,10 +38,14 @@ export const getMovingAveragesController = withController(
       data.weight,
     );
 
-    res.status(StatusCodes.OK).json({
-      message: `Moving averages of ${product.name} is listed.`,
-      data: { averages },
-    });
+    sendSuccess(
+      res,
+      {
+        product: { _id: product._id, name: product.name },
+        averages,
+      },
+      SuccessMessages.OK_MOVING_AVERAGES,
+    );
   },
 );
 
@@ -52,10 +61,14 @@ export const getGrowthRateController = withController(
 
     const growthRates = await growthRateService(salesInterval);
 
-    res.status(StatusCodes.OK).json({
-      message: `Growth rates of ${product.name} is listed.`,
-      data: { growthRates },
-    });
+    sendSuccess(
+      res,
+      {
+        product: { _id: product._id, name: product.name },
+        growthRates,
+      },
+      SuccessMessages.OK_GROWTH_RATES,
+    );
   },
 );
 
@@ -70,12 +83,16 @@ export const getSalesAccelerationController = withController(
     );
 
     const growthRates = await growthRateService(salesInterval);
-    const accelerations = await salesAccelerationService(growthRates);
+    const accelerationRates = await salesAccelerationService(growthRates);
 
-    res.status(StatusCodes.OK).json({
-      message: `Acceleration rates of ${product.name} is listed.`,
-      data: { accelerations },
-    });
+    sendSuccess(
+      res,
+      {
+        product: { _id: product._id, name: product.name },
+        accelerationRates,
+      },
+      SuccessMessages.OK_ACCELERATION_RATES,
+    );
   },
 );
 
@@ -94,10 +111,14 @@ export const getMovingLinearRegressionSlopesController = withController(
       data.interval,
     );
 
-    res.status(StatusCodes.OK).json({
-      message: `Linear regression slopes of ${product.name} is listed.`,
-      data: { slopes },
-    });
+    sendSuccess(
+      res,
+      {
+        product: { _id: product._id, name: product.name },
+        slopes,
+      },
+      SuccessMessages.OK_LINEAR_REGRESSION_SLOPES,
+    );
   },
 );
 
@@ -121,13 +142,15 @@ export const getGroupedLinearRegressionSlopesController = withController(
       sensitivity,
     );
 
-    res.status(StatusCodes.OK).json({
-      message: `Linear regression slopes of ${product.name} is listed.`,
-      data: {
+    sendSuccess(
+      res,
+      {
+        product: { _id: product._id, name: product.name },
         maturity_top: result.maturity_top,
         maturity_bottom: result.maturity_bottom,
         slopes: result.slopes,
       },
-    });
+      SuccessMessages.OK_PHASES,
+    );
   },
 );

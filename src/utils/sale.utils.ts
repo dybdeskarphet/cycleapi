@@ -1,8 +1,9 @@
 import { StatusCodes } from "http-status-codes";
-import { ServiceError } from "../errors/service.error";
+import { ApiError } from "../errors/api.error";
 import { Intervals } from "../enums/intervals.enum";
 import { IMiniSale, ISale, SaleDocument } from "../types/sale.types";
 import { getDateOfSale, timeToDate } from "./time.utils";
+import { ErrorMessages } from "../enums/messages.enum";
 
 export const sortSalesByTime = (sales: SaleDocument[]) => {
   return sales.sort(
@@ -82,9 +83,9 @@ export const convertSalesDateRange = async (
     case Intervals.Weekly:
       return await calculateSalesDateInterval(sortedSales, "week");
     default:
-      throw new ServiceError(
+      throw new ApiError(
         StatusCodes.BAD_REQUEST,
-        "Interval should be 'yearly', 'monthly', 'weekly', 'daily'",
+        ErrorMessages.INVALID_INTERVAL,
       );
   }
 };

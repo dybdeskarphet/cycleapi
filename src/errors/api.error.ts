@@ -1,7 +1,13 @@
-class ServiceError extends Error {
+import { ErrorMessages } from "../enums/messages.enum";
+
+class ApiError extends Error {
   status: number;
   errors: object | null;
-  constructor(status: number, message: string, errors: object | null = null) {
+  constructor(
+    status: number,
+    message: ErrorMessages,
+    errors: object | null = null,
+  ) {
     super(message);
     this.status = status;
     this.errors = errors && Object.keys(errors).length > 0 ? errors : null;
@@ -10,4 +16,4 @@ class ServiceError extends Error {
   }
 }
 
-export { ServiceError };
+export { ApiError };

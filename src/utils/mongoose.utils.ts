@@ -1,10 +1,11 @@
 import { Types } from "mongoose";
-import { ServiceError } from "../errors/service.error";
+import { ApiError } from "../errors/api.error";
 import { StatusCodes } from "http-status-codes";
+import { ErrorMessages } from "../enums/messages.enum";
 
 export const validateAndReturnObjectId = (id: string) => {
   if (!Types.ObjectId.isValid(id)) {
-    throw new ServiceError(StatusCodes.BAD_REQUEST, "ID is invalid.");
+    throw new ApiError(StatusCodes.BAD_REQUEST, ErrorMessages.INVALID_ID);
   } else {
     return new Types.ObjectId(id);
   }

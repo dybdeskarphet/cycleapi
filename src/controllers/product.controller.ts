@@ -8,6 +8,7 @@ import {
 import {
   handleControllerError,
   handleZodParsed,
+  sendSuccess,
   withController,
 } from "../utils/express.utils";
 import { StatusCodes } from "http-status-codes";
@@ -15,44 +16,37 @@ import {
   ZodProductFilterBody,
   ZodProductRequestBody,
 } from "../types/product.types";
+import { SuccessMessages } from "../enums/messages.enum";
 
 export const postProductController = withController(
   async (req: Request, res: Response) => {
     const data = handleZodParsed(ZodProductRequestBody.safeParse(req.body));
     const product = await createProductService(data);
-    res
-      .status(StatusCodes.CREATED)
-      .json({ message: "Product created.", data: { product } });
-    return;
+    sendSuccess(
+      res,
+      { product },
+      SuccessMessages.PRODUCT_CREATED,
+      StatusCodes.CREATED,
+    );
   },
 );
 
 export const getProductsController = (hasFilter: boolean = false) => {
-  return async (req: Request, res: Response) => {
-    try {
-      const body = hasFilter
-        ? handleZodParsed(ZodProductFilterBody.safeParse(req.body))
-        : {};
+  return withController(async (req: Request, res: Response) => {
+    const body = hasFilter
+      ? handleZodParsed(ZodProductFilterBody.safeParse(req.body))
+      : {};
 
-      const products = await getProductService(body);
+    const products = await getProductService(body);
 
-      res
-        .status(StatusCodes.OK)
-        .json({ message: "Products are listed.", data: { products } });
-      return;
-    } catch (error) {
-      handleControllerError(res, error, true);
-      return;
-    }
-  };
+    sendSuccess(res, { products }, SuccessMessages.PRODUCT_LISETED);
+  });
 };
 
 export const getProductByIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id);
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "Product is displayed.", data: { product } });
+    sendSuccess(res, { product }, SuccessMessages.PRODUCT_LISETED);
   },
 );
 
@@ -60,9 +54,6 @@ export const deleteProductByIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id);
     const deleteCount = await deleteProductService(product);
-    res.status(StatusCodes.OK).json({
-      message: `${deleteCount} product(s) deleted.`,
-      data: { product },
-    });
+    sendSuccess(res, { deleteCount, product }, SuccessMessages.PRODUCT_DELETED);
   },
 );

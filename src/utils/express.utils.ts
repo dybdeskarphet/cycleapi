@@ -1,33 +1,37 @@
 import { Request, Response } from "express";
-import { ServiceError } from "../errors/service.error";
+import { ApiError } from "../errors/api.error";
 import { StatusCodes } from "http-status-codes";
 import { SafeParseReturnType } from "zod";
 import "dotenv/config";
+import { ErrorMessages } from "../enums/messages.enum";
 
 export const handleControllerError = (
   res: Response,
   error: unknown,
   verbose?: boolean,
 ) => {
-  if (error instanceof ServiceError) {
+  if (error instanceof ApiError) {
     (verbose || process.env.VERBOSE_LOG === "true") && console.error(error);
     res.status(error.status).json({
+      success: false,
       message: error.message,
       ...(error.errors ? { errors: error.errors } : []),
     });
   } else if (error instanceof Error && error.name === "ValidationError") {
     (verbose || process.env.VERBOSE_LOG === "true") && console.error(error);
-    res.status(StatusCodes.BAD_REQUEST).json({ message: `${error}` });
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ success: false, message: `${error}` });
   } else if (error instanceof SyntaxError) {
     (verbose || process.env.VERBOSE_LOG === "true") && console.error(error);
     res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ message: `Invalid JSON format.` });
+      .json({ success: false, message: `Invalid JSON format.` });
   } else {
     (verbose || process.env.VERBOSE_LOG === "true") && console.error(error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal server error." });
+      .json({ success: false, message: "Internal server error." });
   }
 };
 
@@ -48,12 +52,25 @@ export const handleZodParsed = <Input, Output = Input>(
   parsed: SafeParseReturnType<Input, Output>,
 ): Output => {
   if (!parsed.success) {
-    throw new ServiceError(
+    throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      "Check your request body.",
+      ErrorMessages.ZOD_ERROR,
       parsed.error.issues,
     );
   }
 
   return parsed.data;
+};
+
+export const sendSuccess = <TData>(
+  res: Response,
+  data: TData,
+  message = "Success.",
+  status = StatusCodes.OK,
+) => {
+  return res.status(status).json({
+    success: true,
+    message,
+    data,
+  });
 };
