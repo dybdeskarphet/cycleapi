@@ -9,7 +9,7 @@ import { lifecycleRoutes } from "./routes/lifecycle.routes";
 const app: Express = express();
 const port = process.env.API_PORT || 3000;
 
-connectDatabase(__filename);
+await connectDatabase(__filename);
 
 // Check if the request is a valid JSON
 app.use(
