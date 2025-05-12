@@ -4,20 +4,9 @@ import { SaleDocument } from "./sale.types";
 import { z } from "zod";
 import { Sale } from "../models/sale.model";
 
-export const ZodIProduct = z.object({
-  name: z.string(),
-  category: z.string(),
-  creationDate: z.date(),
-  launchDate: z.date(),
-  price: z.number(),
-  region: z.nativeEnum(Region),
-  sales: z.array(z.instanceof(Types.ObjectId).or(z.instanceof(Sale))),
-});
-
 export interface IProduct {
   name: string;
   category: string;
-  creationDate: Date;
   launchDate: Date;
   price: number;
   region: Region;
@@ -31,13 +20,26 @@ export const ZodProductRequestBody = z.object({
   category: z.string(),
   launchDate: z.string(),
   price: z.number(),
-  region: z.string().optional(),
+  region: z.nativeEnum(Region).optional(),
   sales: z
     .array(z.instanceof(Types.ObjectId).or(z.instanceof(Sale)))
     .optional(),
 });
-
 export type ProductRequestBody = z.infer<typeof ZodProductRequestBody>;
+
+export const ZodProductFilterBody = z
+  .object({
+    _id: z.instanceof(Types.ObjectId),
+    name: z.string(),
+    category: z.string(),
+    price: z.number(),
+    launchDate: z.date(),
+    region: z.nativeEnum(Region),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+  })
+  .partial();
+export type ProductFilterBody = z.infer<typeof ZodProductFilterBody>;
 
 export const ZodProductPopulatableFields = z.array(z.enum(["sales"]));
 export type ProductPopulatableFields = z.infer<
