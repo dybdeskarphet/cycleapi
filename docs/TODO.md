@@ -3,4 +3,5 @@
 - [ ] Add instances to Product model
   - It's going to have price, productionDate, instance name. And sales will reference instances instead of directly referencing product.
   - [ ] Also, customPrice field of Sale model will be obselete.
+- [x] Put all the messages into a locale file.
 - [x] Use zod for checking the req.body
