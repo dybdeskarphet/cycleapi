@@ -8,7 +8,6 @@ import {
   deleteSaleService,
   getSaleByIdService,
 } from "../services/sales.service";
-import { ServiceError } from "../errors/service.error";
 import {
   RestoreSaleInputArraySchema,
   SaleDocument,
@@ -24,21 +23,19 @@ import {
 export const getSalesByProductIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id, ["sales"]);
-    let oldSales = product.sales as SaleDocument[];
     let sales = [];
     let interval = handleZodParsed(
       IntervalsWithInstantSchema.safeParse(req.params.interval),
     );
 
-    if (interval === IntervalsWithInstant.Instant) {
-      sales = oldSales;
-    } else {
-      sales = await convertSalesDateRange(
-        oldSales,
-        // NOTE: I had to do this, I know this looks ugly but I only use instant here and noweher else
-        interval as unknown as Intervals,
-      );
-    }
+    sales =
+      interval === IntervalsWithInstant.Instant
+        ? product.sales
+        : await convertSalesDateRange(
+            product.sales as SaleDocument[],
+            //  I had to do this, I know this looks ugly but I only use instant here and noweher else
+            interval as unknown as Intervals,
+          );
 
     res.status(StatusCodes.OK).json({
       message: `All sales are listed for ${product.name}.`,
@@ -46,7 +43,6 @@ export const getSalesByProductIdController = withController(
         sales: sales,
       },
     });
-    return;
   },
 );
 
@@ -59,7 +55,6 @@ export const postNewSaleController = withController(
     res
       .status(StatusCodes.CREATED)
       .json({ message: "New sale created.", data: { sale } });
-    return;
   },
 );
 
@@ -68,6 +63,7 @@ export const deleteSaleByIdController = withController(
     const product = await getProductByIdService(req.params.productId);
     const sale = await getSaleByIdService(req.params.saleId);
     const deleteCount = await deleteSaleService(product, sale);
+
     res
       .status(StatusCodes.OK)
       .json({ message: `${deleteCount} sale(s) deleted.`, data: { sale } });
@@ -79,20 +75,12 @@ export const restoreOldSalesController = withController(
     const product = await getProductByIdService(req.params.productId, [
       "sales",
     ]);
-    const parseResult = RestoreSaleInputArraySchema.safeParse(req.body);
 
-    if (!parseResult.success) {
-      throw new ServiceError(
-        StatusCodes.BAD_REQUEST,
-        "Invalid request body:",
-        parseResult.error.issues,
-      );
-    }
-
-    const result = await deleteAllSalesAndRestoreService(
-      product,
-      parseResult.data,
+    const body = handleZodParsed(
+      RestoreSaleInputArraySchema.safeParse(req.body),
     );
+
+    const result = await deleteAllSalesAndRestoreService(product, body);
 
     res
       .status(StatusCodes.OK)
