@@ -20,7 +20,7 @@ import {
   LRegression,
   MovingAverages,
 } from "../types/lifecycle.types";
-import { SuccessMessages } from "../enums/messages.enum";
+import { SuccessEntries } from "../constants/messages.constants";
 
 export const getMovingAveragesController = withController(
   async (req: Request, res: Response) => {
@@ -44,7 +44,7 @@ export const getMovingAveragesController = withController(
         product: { _id: product._id, name: product.name },
         averages,
       },
-      SuccessMessages.OK_MOVING_AVERAGES,
+      SuccessEntries.OK_MOVING_AVERAGES,
     );
   },
 );
@@ -67,7 +67,7 @@ export const getGrowthRateController = withController(
         product: { _id: product._id, name: product.name },
         growthRates,
       },
-      SuccessMessages.OK_GROWTH_RATES,
+      SuccessEntries.OK_GROWTH_RATES,
     );
   },
 );
@@ -91,7 +91,7 @@ export const getSalesAccelerationController = withController(
         product: { _id: product._id, name: product.name },
         accelerationRates,
       },
-      SuccessMessages.OK_ACCELERATION_RATES,
+      SuccessEntries.OK_ACCELERATION_RATES,
     );
   },
 );
@@ -117,7 +117,7 @@ export const getMovingLinearRegressionSlopesController = withController(
         product: { _id: product._id, name: product.name },
         slopes,
       },
-      SuccessMessages.OK_LINEAR_REGRESSION_SLOPES,
+      SuccessEntries.OK_LINEAR_REGRESSION_SLOPES,
     );
   },
 );
@@ -150,7 +150,7 @@ export const getGroupedLinearRegressionSlopesController = withController(
         maturity_bottom: result.maturity_bottom,
         slopes: result.slopes,
       },
-      SuccessMessages.OK_PHASES,
+      SuccessEntries.OK_PHASES,
     );
   },
 );

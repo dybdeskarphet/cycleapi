@@ -23,7 +23,7 @@ import {
   IntervalsWithInstant,
   IntervalsWithInstantSchema,
 } from "../enums/intervals.enum";
-import { SuccessMessages } from "../enums/messages.enum";
+import { SuccessEntries } from "../constants/messages.constants";
 
 export const getSalesByProductIdController = withController(
   async (req: Request, res: Response) => {
@@ -48,7 +48,7 @@ export const getSalesByProductIdController = withController(
         product: { _id: product._id, name: product.name },
         sales,
       },
-      SuccessMessages.SALE_LISTED,
+      SuccessEntries.SALE_LISTED,
     );
   },
 );
@@ -65,7 +65,7 @@ export const postNewSaleController = withController(
         product: { _id: product._id, name: product.name },
         sale,
       },
-      SuccessMessages.SALE_CREATED,
+      SuccessEntries.SALE_CREATED,
       StatusCodes.CREATED,
     );
   },
@@ -83,7 +83,7 @@ export const deleteSaleByIdController = withController(
         product: { _id: product._id, name: product.name },
         sale,
       },
-      SuccessMessages.SALE_DELETED,
+      SuccessEntries.SALE_DELETED,
     );
   },
 );
@@ -99,6 +99,6 @@ export const restoreOldSalesController = withController(
     ]);
 
     const result = await deleteAllSalesAndRestoreService(product, body);
-    sendSuccess(res, { sales: result }, SuccessMessages.SALE_RESTORED);
+    sendSuccess(res, { sales: result }, SuccessEntries.SALE_RESTORED);
   },
 );

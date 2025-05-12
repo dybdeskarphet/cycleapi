@@ -3,7 +3,7 @@ import { ApiError } from "../errors/api.error";
 import { Intervals } from "../enums/intervals.enum";
 import { IMiniSale, ISale, SaleDocument } from "../types/sale.types";
 import { getDateOfSale, timeToDate } from "./time.utils";
-import { ErrorMessages } from "../enums/messages.enum";
+import { ErrorEntries } from "../constants/messages.constants";
 
 export const sortSalesByTime = (sales: SaleDocument[]) => {
   return sales.sort(
@@ -85,7 +85,7 @@ export const convertSalesDateRange = async (
     default:
       throw new ApiError(
         StatusCodes.BAD_REQUEST,
-        ErrorMessages.INVALID_INTERVAL,
+        ErrorEntries.INVALID_INTERVAL,
       );
   }
 };

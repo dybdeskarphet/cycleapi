@@ -3,7 +3,7 @@ import { Intervals } from "../enums/intervals.enum";
 import { IMiniSale, SaleDocument } from "../types/sale.types";
 import { ApiError } from "../errors/api.error";
 import { StatusCodes } from "http-status-codes";
-import { ErrorMessages } from "../enums/messages.enum";
+import { ErrorEntries } from "../constants/messages.constants";
 
 export function isValidInterval(value: string): value is Intervals {
   return Object.values(Intervals).includes(value as Intervals);
@@ -11,7 +11,7 @@ export function isValidInterval(value: string): value is Intervals {
 
 export const errorIfInvalidInterval = async (interval: string) => {
   if (!isValidInterval(interval)) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, ErrorMessages.INVALID_INTERVAL);
+    throw new ApiError(StatusCodes.BAD_REQUEST, ErrorEntries.INVALID_INTERVAL);
   }
 };
 

@@ -12,7 +12,7 @@ import {
   LRegression,
   MovingAverages,
 } from "../types/lifecycle.types";
-import { ErrorMessages } from "../enums/messages.enum";
+import { ErrorEntries } from "../constants/messages.constants";
 
 export const movingAveragesOfSalesService = async (
   sales: IMiniSale[],
@@ -22,7 +22,7 @@ export const movingAveragesOfSalesService = async (
   if (windowSize > sales.length) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      ErrorMessages.WINDOW_SIZE_INCOMPATIBLE_LENGTH,
+      ErrorEntries.WINDOW_SIZE_INCOMPATIBLE_LENGTH,
     );
   }
 
@@ -85,7 +85,7 @@ export const movingLinearRegressionSlopeService = async (
   if (windowSize > sales.length) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      ErrorMessages.WINDOW_SIZE_INCOMPATIBLE_LENGTH,
+      ErrorEntries.WINDOW_SIZE_INCOMPATIBLE_LENGTH,
     );
   }
 
@@ -113,7 +113,7 @@ export const groupedLinearRegressionSlopeService = async (
   if (windowSize > sales.length) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      ErrorMessages.WINDOW_SIZE_INCOMPATIBLE_LENGTH,
+      ErrorEntries.WINDOW_SIZE_INCOMPATIBLE_LENGTH,
     );
   }
 

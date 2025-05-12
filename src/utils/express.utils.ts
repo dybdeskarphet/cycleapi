@@ -3,7 +3,8 @@ import { ApiError } from "../errors/api.error";
 import { StatusCodes } from "http-status-codes";
 import { SafeParseReturnType } from "zod";
 import "dotenv/config";
-import { ErrorMessages } from "../enums/messages.enum";
+import { ErrorEntries } from "../constants/messages.constants";
+import { SuccessEntry } from "../types/express.types";
 
 export const handleControllerError = (
   res: Response,
@@ -14,6 +15,7 @@ export const handleControllerError = (
     (verbose || process.env.VERBOSE_LOG === "true") && console.error(error);
     res.status(error.status).json({
       success: false,
+      code: error.code,
       message: error.message,
       ...(error.errors ? { errors: error.errors } : []),
     });
@@ -21,17 +23,21 @@ export const handleControllerError = (
     (verbose || process.env.VERBOSE_LOG === "true") && console.error(error);
     res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ success: false, message: `${error}` });
+      .json({ success: false, code: "VALIDATION_ERROR", message: `${error}` });
   } else if (error instanceof SyntaxError) {
     (verbose || process.env.VERBOSE_LOG === "true") && console.error(error);
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ success: false, message: `Invalid JSON format.` });
+    res.status(StatusCodes.BAD_REQUEST).json({
+      success: false,
+      code: "INVALID_JSON",
+      message: `Invalid JSON format.`,
+    });
   } else {
     (verbose || process.env.VERBOSE_LOG === "true") && console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ success: false, message: "Internal server error." });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      code: ErrorEntries.INTERNAL_SERVER_ERROR.code,
+      message: ErrorEntries.INTERNAL_SERVER_ERROR.message,
+    });
   }
 };
 
@@ -42,7 +48,7 @@ export const withController = (
     try {
       await controllerFn(req, res);
     } catch (error) {
-      handleControllerError(res, error, true);
+      handleControllerError(res, error);
       return;
     }
   };
@@ -54,7 +60,7 @@ export const handleZodParsed = <Input, Output = Input>(
   if (!parsed.success) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      ErrorMessages.ZOD_ERROR,
+      ErrorEntries.ZOD_ERROR,
       parsed.error.issues,
     );
   }
@@ -65,12 +71,13 @@ export const handleZodParsed = <Input, Output = Input>(
 export const sendSuccess = <TData>(
   res: Response,
   data: TData,
-  message = "Success.",
+  entry: SuccessEntry,
   status = StatusCodes.OK,
 ) => {
   return res.status(status).json({
     success: true,
-    message,
+    code: entry.code,
+    message: entry.message,
     data,
   });
 };

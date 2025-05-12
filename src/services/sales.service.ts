@@ -10,13 +10,13 @@ import {
 } from "../types/sale.types";
 import { Sale } from "../models/sale.model";
 import { ProductDocument } from "../types/product.types";
-import { ErrorMessages } from "../enums/messages.enum";
+import { ErrorEntries } from "../constants/messages.constants";
 
 export const getSaleByIdService = async (id: string): Promise<SaleDocument> => {
   const sale = await Sale.findById(validateAndReturnObjectId(id)).exec();
 
   if (!sale || !(sale instanceof Sale)) {
-    throw new ApiError(StatusCodes.NOT_FOUND, ErrorMessages.NO_SALE);
+    throw new ApiError(StatusCodes.NOT_FOUND, ErrorEntries.NO_SALE);
   }
 
   return sale;
@@ -49,7 +49,7 @@ export const deleteSaleService = async (
         );
         throw new ApiError(
           StatusCodes.INTERNAL_SERVER_ERROR,
-          ErrorMessages.INTERNAL_SERVER_ERROR,
+          ErrorEntries.INTERNAL_SERVER_ERROR,
         );
       }
       return !(id as Types.ObjectId).equals(sale._id);

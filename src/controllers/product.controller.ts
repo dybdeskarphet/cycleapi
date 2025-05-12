@@ -16,7 +16,7 @@ import {
   ZodProductFilterBody,
   ZodProductRequestBody,
 } from "../types/product.types";
-import { SuccessMessages } from "../enums/messages.enum";
+import { SuccessEntries } from "../constants/messages.constants";
 
 export const postProductController = withController(
   async (req: Request, res: Response) => {
@@ -25,7 +25,7 @@ export const postProductController = withController(
     sendSuccess(
       res,
       { product },
-      SuccessMessages.PRODUCT_CREATED,
+      SuccessEntries.PRODUCT_CREATED,
       StatusCodes.CREATED,
     );
   },
@@ -39,14 +39,14 @@ export const getProductsController = (hasFilter: boolean = false) => {
 
     const products = await getProductService(body);
 
-    sendSuccess(res, { products }, SuccessMessages.PRODUCT_LISETED);
+    sendSuccess(res, { products }, SuccessEntries.PRODUCT_LISETED);
   });
 };
 
 export const getProductByIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id);
-    sendSuccess(res, { product }, SuccessMessages.PRODUCT_LISETED);
+    sendSuccess(res, { product }, SuccessEntries.PRODUCT_LISETED);
   },
 );
 
@@ -54,6 +54,6 @@ export const deleteProductByIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id);
     const deleteCount = await deleteProductService(product);
-    sendSuccess(res, { deleteCount, product }, SuccessMessages.PRODUCT_DELETED);
+    sendSuccess(res, { deleteCount, product }, SuccessEntries.PRODUCT_DELETED);
   },
 );

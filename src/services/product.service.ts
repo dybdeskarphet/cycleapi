@@ -1,4 +1,4 @@
-import { ErrorMessages } from "../enums/messages.enum";
+import { ErrorEntries } from "../constants/messages.constants";
 import { ApiError } from "../errors/api.error";
 import { Product } from "../models/product.model";
 import {
@@ -15,7 +15,7 @@ import { StatusCodes } from "http-status-codes";
 const getProductService = async (filters: ProductFilterBody = {}) => {
   const result = await Product.find(filters).exec();
   if (!result) {
-    throw new ApiError(StatusCodes.NOT_FOUND, ErrorMessages.NO_PRODUCT);
+    throw new ApiError(StatusCodes.NOT_FOUND, ErrorEntries.NO_PRODUCT);
   }
 
   return result;
@@ -34,7 +34,7 @@ const getProductByIdService = async (
     .exec();
 
   if (!product || !(product instanceof Product)) {
-    throw new ApiError(StatusCodes.NOT_FOUND, ErrorMessages.NO_PRODUCT);
+    throw new ApiError(StatusCodes.NOT_FOUND, ErrorEntries.NO_PRODUCT);
   }
 
   return product;
