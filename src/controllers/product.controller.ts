@@ -5,11 +5,18 @@ import {
   getProductByIdService,
   deleteProductService,
 } from "../services/product.service";
-import { handleZodParsed, withController } from "../utils/express.utils";
+import {
+  handleControllerError,
+  handleZodParsed,
+  withController,
+} from "../utils/express.utils";
 import { StatusCodes } from "http-status-codes";
-import { ZodProductRequestBody } from "../types/product.types";
+import {
+  ZodProductFilterBody,
+  ZodProductRequestBody,
+} from "../types/product.types";
 
-const postProductController = withController(
+export const postProductController = withController(
   async (req: Request, res: Response) => {
     const data = handleZodParsed(ZodProductRequestBody.safeParse(req.body));
     const product = await createProductService(data);
@@ -20,17 +27,27 @@ const postProductController = withController(
   },
 );
 
-// TODO: Use this as get products by filter, if no filter is provided, it gets all.
-const getAllProductsController = withController(
-  async (req: Request, res: Response) => {
-    const products = await getProductService();
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "All products are listed.", data: { products } });
-  },
-);
+export const getProductsController = (hasFilter: boolean = false) => {
+  return async (req: Request, res: Response) => {
+    try {
+      const body = hasFilter
+        ? handleZodParsed(ZodProductFilterBody.safeParse(req.body))
+        : {};
 
-const getProductByIdController = withController(
+      const products = await getProductService(body);
+
+      res
+        .status(StatusCodes.OK)
+        .json({ message: "Products are listed.", data: { products } });
+      return;
+    } catch (error) {
+      handleControllerError(res, error, true);
+      return;
+    }
+  };
+};
+
+export const getProductByIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id);
     res
@@ -39,7 +56,7 @@ const getProductByIdController = withController(
   },
 );
 
-const deleteProductByIdController = withController(
+export const deleteProductByIdController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.id);
     const deleteCount = await deleteProductService(product);
@@ -49,10 +66,3 @@ const deleteProductByIdController = withController(
     });
   },
 );
-
-export {
-  postProductController,
-  getAllProductsController,
-  getProductByIdController,
-  deleteProductByIdController,
-};
