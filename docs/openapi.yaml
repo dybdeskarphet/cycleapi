@@ -36,7 +36,20 @@ paths:
           description: Product created.
       tags:
         - Products
-
+  /products/filter:
+    post:
+      summary: Get products by filtering
+      responses:
+        200:
+          description: List of products.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+        - Products
   /products/{id}:
     get:
       summary: Get a product by ID
