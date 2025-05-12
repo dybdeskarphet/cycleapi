@@ -2,20 +2,24 @@ import { Request, Response } from "express";
 import { ServiceError } from "../errors/service.error";
 import { StatusCodes } from "http-status-codes";
 import { SafeParseReturnType } from "zod";
+import "dotenv/config";
 
 export const handleControllerError = (
   res: Response,
   error: unknown,
-  verbose: boolean = false,
+  verbose?: boolean,
 ) => {
   if (error instanceof ServiceError) {
+    (verbose || process.env.VERBOSE_LOG === "true") && console.error(error);
     res.status(error.status).json({
       message: error.message,
       ...(error.errors ? { errors: error.errors } : []),
     });
   } else if (error instanceof Error && error.name === "ValidationError") {
+    (verbose || process.env.VERBOSE_LOG === "true") && console.error(error);
     res.status(StatusCodes.BAD_REQUEST).json({ message: `${error}` });
   } else if (error instanceof SyntaxError) {
+    (verbose || process.env.VERBOSE_LOG === "true") && console.error(error);
     res
       .status(StatusCodes.BAD_REQUEST)
       .json({ message: `Invalid JSON format.` });
