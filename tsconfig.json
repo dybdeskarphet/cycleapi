@@ -10,6 +10,6 @@
     "outDir": "./dist",
     "resolveJsonModule": true
   },
-  "include": ["src", "src/types"],
-  "files": ["src/server.ts", "src/types/express.d.ts"]
+  "include": ["src", "src/types", "docs"],
+  "files": ["./src/server.ts"]
 }

@@ -2,9 +2,9 @@ import express, { Express, NextFunction, Request, Response } from "express";
 import ip from "ip";
 import connectDatabase from "./db";
 import { productRoutes } from "./routes/product.routes";
-import swaggerUi from "swagger-ui-express";
-import docsMiddleware from "./middlewares/swagger.middleware";
 import { lifecycleRoutes } from "./routes/lifecycle.routes";
+import { openApiDocument } from "./docs/openapi";
+import path from "path";
 
 const app: Express = express();
 const port = process.env.API_PORT || 3000;
@@ -31,15 +31,23 @@ app.use(
   }),
 );
 
+app.get("/api-docs.json", (req, res) => {
+  res.json(openApiDocument);
+});
+
+app.get("/api-docs", (req, res) => {
+  res.sendFile(path.join(__dirname, "../docs/rapidoc.html"));
+});
+
 app.get("/", (req: Request, res: Response) => {
   // NOTE: Change it to /api/v1 before release.
   res.redirect("/api-docs");
 });
+
 app.get("/api/v1", (req: Request, res: Response) => {
   res.send("Go to /api-docs to see the full documentation.");
 });
 
-app.use("/api-docs", swaggerUi.serve, docsMiddleware);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/lifecycle", lifecycleRoutes);
 
