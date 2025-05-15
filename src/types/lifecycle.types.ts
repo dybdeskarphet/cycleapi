@@ -22,7 +22,7 @@ export namespace MovingAverages {
 
   export const ZodUnit = z.object({
     amount: z.number(),
-    timestamp: z.date(),
+    timestamp: z.string(),
   });
 
   export type Unit = z.infer<typeof ZodUnit>;
