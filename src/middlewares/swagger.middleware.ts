@@ -4,11 +4,9 @@ import YAML from "yamljs";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
 import { NextFunction, Request, Response } from "express";
+import { openApiDocument } from "../docs/openapi";
 
 const port = process.env.API_PORT || 3000;
-const openApiDocument = YAML.load(
-  path.join(__dirname, "../../docs/openapi.yaml"),
-);
 
 const docsMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const localServerUrl = `http://${ip.address()}:${port}/api/v1`;
