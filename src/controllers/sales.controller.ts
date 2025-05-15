@@ -81,6 +81,7 @@ export const deleteSaleByIdController = withController(
       res,
       {
         product: { _id: product._id, name: product.name },
+        deleteCount,
         sale,
       },
       SuccessEntries.SALE_DELETED,
@@ -99,6 +100,10 @@ export const restoreOldSalesController = withController(
     ]);
 
     const result = await deleteAllSalesAndRestoreService(product, body);
-    sendSuccess(res, { sales: result }, SuccessEntries.SALE_RESTORED);
+    sendSuccess(
+      res,
+      { product: { _id: product._id, name: product.name }, sales: result },
+      SuccessEntries.SALE_RESTORED,
+    );
   },
 );

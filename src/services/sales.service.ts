@@ -31,6 +31,7 @@ export const createSaleService = async (
 
   product.sales.push(unit._id as Types.ObjectId);
   await product.save();
+  return unit;
 };
 
 export const deleteSaleService = async (
