@@ -32,12 +32,39 @@ A RESTful API built with Express.js and TypeScript to analyze and forecast produ
 | POST   | `/lifecycle/:id/lr-slopes`           | Get linear regression slopes      |
 | POST   | `/lifecycle/:id/phases-with-lr`      | Get lifecycle phases with LR      |
 
-## 🛠 Tech Stack
+## 🚀 Usage
 
-- **Bun**, **Express.js**
-- **MongoDB** with Mongoose
-- **Zod** for input validation
-- **Swagger-compatible** schema design
+### Build
+
+```bash
+bun run build
+```
+
+Compiles the TypeScript source files into JavaScript and outputs them to the `dist/` directory.
+
+### Development
+
+```bash
+bun run dev
+```
+
+Runs the server in development mode with hot reloading.
+
+### Start
+
+```bash
+bun run start
+```
+
+Starts the compiled server from the `dist/` directory.
+
+### Type Check
+
+```bash
+bun run check
+```
+
+Performs a TypeScript type check without emitting output (needs `tsc`).
 
 ## 📦 Example Use Case
 
@@ -52,6 +79,14 @@ Say you have a product that’s been on the market for a year. Using this API, y
 ## 📌 TODO
 
 See [TODO.md](./docs/TODO.md) for future improvements.
+
+## 🛠 Tech Stack
+
+- **Runtime:** [Bun](https://bun.sh/)
+- **Backend:** Express.js (TypeScript)
+- **Database:** MongoDB (via Mongoose)
+- **Validation:** Zod
+- **OpenAPI Docs:** zod-to-openapi
 
 ## 📣 Contribution
 
