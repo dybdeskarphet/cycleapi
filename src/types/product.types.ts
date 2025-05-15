@@ -4,6 +4,15 @@ import { SaleDocument } from "./sale.types";
 import { z } from "zod";
 import { Sale } from "../models/sale.model";
 
+export const ZodIProduct = z.object({
+  name: z.string(),
+  category: z.string(),
+  launchDate: z.date(),
+  price: z.number(),
+  region: z.nativeEnum(Region),
+  sales: z.array(z.instanceof(Types.ObjectId).or(z.instanceof(Sale))),
+});
+
 export interface IProduct {
   name: string;
   category: string;

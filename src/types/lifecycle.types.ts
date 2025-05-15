@@ -20,36 +20,46 @@ export namespace MovingAverages {
     interval: z.nativeEnum(Intervals),
   });
 
-  export interface Unit {
-    amount: number;
-    timestamp: string;
-  }
+  export const ZodUnit = z.object({
+    amount: z.number(),
+    timestamp: z.date(),
+  });
+
+  export type Unit = z.infer<typeof ZodUnit>;
 }
 
 export namespace GrowthRate {
-  export interface Unit {
-    rate: number;
-    timestamp: string;
-  }
-  export interface AccelerationUnit {
-    acceleration: number;
-    timestamp: string;
-  }
+  export const ZodUnit = z.object({
+    rate: z.number(),
+    timestamp: z.string(),
+  });
+  export type Unit = z.infer<typeof ZodUnit>;
+
+  export const ZodAccelerationUnit = z.object({
+    acceleration: z.number(),
+    timestamp: z.string(),
+  });
+  export type AccelerationUnit = z.infer<typeof ZodAccelerationUnit>;
+
   export const RequestBody = z.object({
     interval: z.nativeEnum(Intervals),
   });
 }
 
 export namespace LRegression {
-  export interface Unit {
-    slope: number;
-    timestamp: string;
-  }
-  export interface PhaseUnit {
-    slope: number;
-    phase: string;
-    timestamp: string;
-  }
+  export const ZodUnit = z.object({
+    slope: z.number(),
+    timestamp: z.string(),
+  });
+  export type Unit = z.infer<typeof ZodUnit>;
+
+  export const ZodPhaseUnit = z.object({
+    slope: z.number(),
+    phase: z.string(),
+    timestamp: z.string(),
+  });
+  export type PhaseUnit = z.infer<typeof ZodPhaseUnit>;
+
   export const RequestBody = z.object({
     windowSize: z.number().min(1),
     interval: z.nativeEnum(Intervals),
