@@ -4,3 +4,5 @@
   - It's going to have price, productionDate, instance name. And sales will reference instances instead of directly referencing product.
   - [ ] Also, customPrice field of Sale model will be obselete.
 - [ ] Add .env.example
+- [ ] Add token based auth system
+- [ ] Make all the types and schemas look like token.types
