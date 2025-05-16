@@ -5,6 +5,7 @@ import { productRoutes } from "./routes/product.routes";
 import { lifecycleRoutes } from "./routes/lifecycle.routes";
 import { openApiDocument } from "./docs/openapi";
 import path from "path";
+import { adminRoutes } from "./routes/admin.routes";
 
 const app: Express = express();
 const port = process.env.API_PORT || 3000;
@@ -50,6 +51,7 @@ app.get("/api/v1", (req: Request, res: Response) => {
 
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/lifecycle", lifecycleRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://${ip.address()}:${port}`);
