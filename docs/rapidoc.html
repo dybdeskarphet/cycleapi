@@ -1,21 +1,66 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <title>CycleAPI Documentation</title>
     <script
       type="module"
       src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"
     ></script>
+    <style>
+      #themeToggle {
+        font-size: large;
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        z-index: 999;
+        padding: 8px 8px;
+        background-color: #11140f;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
-    <rapi-doc
-      spec-url="/api-docs.json"
-      primary-color="#D7E8CD"
-      bg-color="#11140F"
-      text-color="#f2f5eb"
-      header-color="#272b25"
-    >
-    </rapi-doc>
+    <button id="themeToggle">Toggle Theme</button>
+
+    <rapi-doc id="rapi-doc" spec-url="/api-docs.json" theme="light"></rapi-doc>
+
+    <script>
+      const rapidoc = document.getElementById("rapi-doc");
+      const toggleButton = document.getElementById("themeToggle");
+
+      const changeTheme = (theme) => {
+        if (theme === "dark") {
+          toggleButton.textContent = "🌙";
+          toggleButton.style.backgroundColor = "#D7E8CD";
+          rapidoc.setAttribute("theme", "dark");
+          rapidoc.setAttribute("primary-color", "#D7E8CD");
+          rapidoc.setAttribute("bg-color", "#11140F");
+          rapidoc.setAttribute("text-color", "#f2f5eb");
+          rapidoc.setAttribute("header-color", "#272b25");
+        } else {
+          toggleButton.textContent = "🌞";
+          toggleButton.style.backgroundColor = "#2A2D23";
+          rapidoc.setAttribute("theme", "light");
+          rapidoc.setAttribute("primary-color", "#a2b894");
+          rapidoc.setAttribute("bg-color", "#f2f5eb");
+          rapidoc.setAttribute("text-color", "#11140F");
+          rapidoc.setAttribute("header-color", "##ddf0d3");
+        }
+      };
+
+      let currentTheme = rapidoc.getAttribute("theme");
+      changeTheme(currentTheme);
+
+      toggleButton.addEventListener("click", () => {
+        currentTheme = rapidoc.getAttribute("theme");
+        const newTheme = currentTheme === "light" ? "dark" : "light";
+        rapidoc.setAttribute("theme", newTheme);
+        changeTheme(newTheme);
+      });
+    </script>
   </body>
 </html>
