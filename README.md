@@ -1,7 +1,7 @@
 # 📈 CycleAPI
 
 > [!WARNING]
-> This project is still in the development. Use at your own risk.
+> This project is still under development. Use at your own risk.
 
 A RESTful API built with Express.js and TypeScript to analyze and forecast product lifecycle trends using sales data. This system helps categorize products into lifecycle phases and calculate growth and regression metrics, offering valuable insights for marketing and production planning.
 
