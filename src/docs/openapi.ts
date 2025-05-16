@@ -25,6 +25,7 @@ import {
   phasesDocument,
 } from "./paths/lifecycle";
 import { OpenAPIObjectConfig } from "@asteasolutions/zod-to-openapi/dist/v3.0/openapi-generator";
+import { postGenerateTokenDocument } from "./paths/admin";
 
 export const registry = new OpenAPIRegistry();
 
@@ -42,6 +43,7 @@ const documents: RouteConfig[] = [
   getGrowthRatesDocument,
   lrSlopesDocument,
   phasesDocument,
+  postGenerateTokenDocument,
 ];
 
 documents.forEach((doc) => {
@@ -80,6 +82,10 @@ export const openApiDocument: OpenAPIObjectConfig = generator.generateDocument({
     {
       name: "Lifecycle",
       description: "Product lifecycle analysis operations",
+    },
+    {
+      name: "Admin",
+      description: "Admin actions",
     },
   ],
 });
