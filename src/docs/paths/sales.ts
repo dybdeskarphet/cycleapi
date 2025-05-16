@@ -1,4 +1,7 @@
-import { RouteConfig } from "@asteasolutions/zod-to-openapi";
+import {
+  extendZodWithOpenApi,
+  RouteConfig,
+} from "@asteasolutions/zod-to-openapi";
 import {
   ErrorEntries,
   SuccessEntries,
@@ -16,6 +19,8 @@ import { IntervalsWithInstantSchema } from "../../enums/intervals.enum";
 import { z } from "zod";
 import { ZodSaleRequestBody } from "../../types/sale.types";
 import { BadRequestZod } from "../utils";
+
+extendZodWithOpenApi(z);
 
 export const getSalesByIntervalDocument: RouteConfig = {
   method: "get",

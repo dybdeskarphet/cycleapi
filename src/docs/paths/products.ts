@@ -1,4 +1,7 @@
-import { RouteConfig } from "@asteasolutions/zod-to-openapi";
+import {
+  extendZodWithOpenApi,
+  RouteConfig,
+} from "@asteasolutions/zod-to-openapi";
 import {
   ErrorEntries,
   SuccessEntries,
@@ -17,6 +20,8 @@ import {
 } from "../../types/product.types";
 import { z } from "zod";
 import { BadRequestZod } from "../utils";
+
+extendZodWithOpenApi(z);
 
 export const getProductsDocument: RouteConfig = {
   method: "get",
