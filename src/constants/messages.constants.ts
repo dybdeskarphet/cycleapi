@@ -1,3 +1,5 @@
+import { UNAUTHORIZED } from "http-status-codes";
+
 export const SuccessEntries = {
   OK_MOVING_AVERAGES: {
     code: "OK_MOVING_AVERAGES",
@@ -32,6 +34,7 @@ export const SuccessEntries = {
   SALE_LISTED: { code: "SALE_LISTED", message: "Sale(s) are listed." },
   SALE_DELETED: { code: "SALE_DELETED", message: "Sale(s) are deleted." },
   SALE_RESTORED: { code: "SALE_RESTORED", message: "Sales are restored." },
+  TOKEN_CREATED: { code: "TOKEN_CREATED", message: "Token created." },
 };
 
 export const ErrorEntries = {
@@ -57,5 +60,14 @@ export const ErrorEntries = {
   ZOD_ERROR: {
     code: "ZOD_ERROR",
     message: "Invalid parameters. See the 'errors' field for details.",
+  },
+  INVALID_TIMEOUT: {
+    code: "INVALID_TIMEOUT",
+    message:
+      "Timeout value should be a valid time string like '1d', or '4h1m'.",
+  },
+  UNAUTHORIZED: {
+    code: "UNAUTHORIZED",
+    message: "You're not authorized to perform this action.",
   },
 };
