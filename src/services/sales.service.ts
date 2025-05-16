@@ -4,7 +4,6 @@ import { validateAndReturnObjectId } from "../utils/mongoose.utils";
 import { Types } from "mongoose";
 import {
   RestoreSaleInputArraySchemaType,
-  RestoreSaleInputSchemaType,
   SaleDocument,
   SaleRequestBody,
 } from "../types/sale.types";

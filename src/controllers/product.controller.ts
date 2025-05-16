@@ -6,7 +6,6 @@ import {
   deleteProductService,
 } from "../services/product.service";
 import {
-  handleControllerError,
   handleZodParsed,
   sendSuccess,
   withController,

@@ -12,7 +12,6 @@ import {
   movingLinearRegressionSlopeService,
   salesAccelerationService,
 } from "../services/lifecycle.service";
-import { StatusCodes } from "http-status-codes";
 import { SaleDocument } from "../types/sale.types";
 import { convertSalesDateRange } from "../utils/sale.utils";
 import {
