@@ -1,4 +1,7 @@
-import { RouteConfig } from "@asteasolutions/zod-to-openapi";
+import {
+  extendZodWithOpenApi,
+  RouteConfig,
+} from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { NoProductFoundError, ObjectIdSchema } from "../components/products";
 import {
@@ -18,6 +21,8 @@ import {
   LRegression,
   MovingAverages,
 } from "../../types/lifecycle.types";
+
+extendZodWithOpenApi(z);
 
 export const getMovingAveragesDocument: RouteConfig = {
   method: "post",
