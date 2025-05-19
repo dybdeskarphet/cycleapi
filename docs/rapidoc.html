@@ -26,7 +26,14 @@
   <body>
     <button id="themeToggle">Toggle Theme</button>
 
-    <rapi-doc id="rapi-doc" spec-url="/api-docs.json" theme="light"></rapi-doc>
+    <rapi-doc
+      api-key-name="x-api-key"
+      api-key-location="header"
+      api-key-value=" "
+      id="rapi-doc"
+      spec-url="/api-docs.json"
+      theme="light"
+    ></rapi-doc>
 
     <script>
       const rapidoc = document.getElementById("rapi-doc");

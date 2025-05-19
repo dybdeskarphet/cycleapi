@@ -53,6 +53,13 @@ documents.forEach((doc) => {
 const port = process.env.API_PORT || 3000;
 const localServerUrl = `http://${ip.address()}:${port}/api/v1`;
 const generator = new OpenApiGeneratorV3(registry.definitions);
+
+export const apiKeyAuth = registry.registerComponent("headers", "api-key", {
+  example: "-",
+  required: true,
+  description: "The API key provided to you by the admin.",
+});
+
 export const openApiDocument: OpenAPIObjectConfig = generator.generateDocument({
   info: {
     title: "CycleAPI",
@@ -68,6 +75,7 @@ export const openApiDocument: OpenAPIObjectConfig = generator.generateDocument({
       email: "ahmetardakavakci@gmail.com",
     },
   },
+  security: [{ [apiKeyAuth.name]: [] }],
   openapi: "3.0.0",
   servers: [{ url: localServerUrl, description: "Local server URL (v1)." }],
   tags: [
