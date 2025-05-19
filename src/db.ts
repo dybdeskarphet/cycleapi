@@ -1,5 +1,6 @@
 import "dotenv/config";
 import mongoose from "mongoose";
+import { consola } from "consola";
 
 if (!process.env.MONGODB_URI) {
   console.error("No database URI specified in .env");
@@ -7,11 +8,11 @@ if (!process.env.MONGODB_URI) {
 
 const connectDatabase = async (filename: string) => {
   try {
-    console.log(`MongoDB connecting in ${filename}`);
+    consola.info(`MongoDB connecting in ${filename}`);
     await mongoose.connect(process.env.MONGODB_URI as string);
-    console.log(`MongoDB connected in ${filename}`);
+    consola.info(`MongoDB connected in ${filename}`);
   } catch (error) {
-    console.error(`MongoDB connection error:\n${error}`);
+    consola.error(`MongoDB connection error:\n${error}`);
     process.exit(1);
   }
 };

@@ -1,4 +1,4 @@
-import express, { Express, NextFunction, Request, Response } from "express";
+import express, { Express, Request, Response } from "express";
 import ip from "ip";
 import connectDatabase from "./db";
 import { productRoutes } from "./routes/product.routes";
@@ -9,6 +9,8 @@ import { adminRoutes } from "./routes/admin.routes";
 import { errorHandler } from "./middlewares/error-handler.middlware";
 import "body-parser";
 import { jsonVerify } from "./utils/express.utils";
+import { consola } from "consola";
+import "dotenv/config";
 
 const app: Express = express();
 const port = process.env.API_PORT || 3000;
@@ -34,6 +36,21 @@ app.use("/api/v1/lifecycle", lifecycleRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use(errorHandler);
 
+if (process.env.NODE_ENV !== "development") {
+  const prodChoice = await consola.prompt(
+    "Do you want to start the server in production mode?",
+    {
+      type: "confirm",
+    },
+  );
+
+  if (!prodChoice) {
+    process.exit(0);
+  }
+}
+
 app.listen(port, () => {
-  console.log(`Server is running on http://${ip.address()}:${port}/api-docs`);
+  consola.box(
+    `🚀 Server is running on http://${ip.address()}:${port}\n📃 Check http://${ip.address()}:${port}/api-docs for API documentation`,
+  );
 });

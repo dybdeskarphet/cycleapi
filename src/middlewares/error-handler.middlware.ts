@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../errors/api.error";
 import { StatusCodes } from "http-status-codes";
 import { ErrorEntries } from "../constants/messages.constants";
+import { consola } from "consola";
 
 export const errorHandler = (
   err: any,
@@ -28,5 +29,5 @@ export const errorHandler = (
     });
   }
 
-  process.env.VERBOSE_LOG === "true" && console.error(err);
+  process.env.VERBOSE_LOG === "true" && consola.error(err);
 };
