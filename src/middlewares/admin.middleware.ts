@@ -12,7 +12,6 @@ export const requireAdminAuth = (
   const adminToken = process.env.ADMIN_API_TOKEN;
   const token = req.header("x-admin-api-key");
 
-  // TODO: ApiError is not handled by the error handler, use a error handler middleware.
   if (token !== adminToken) {
     throw new ApiError(StatusCodes.UNAUTHORIZED, ErrorEntries.UNAUTHORIZED);
   }
