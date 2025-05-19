@@ -8,8 +8,8 @@ import { ZodIProduct } from "../../types/product.types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import {
   DeleteCountResponseItem,
-  documentErrorFactory,
-  documentSuccessFactory,
+  errorJsonFactory,
+  successResponseFactory,
 } from "../utils";
 extendZodWithOpenApi(z);
 
@@ -24,28 +24,26 @@ export const CompleteProduct = z
     __v: z.number().default(0),
   });
 
-export const GetProductsResponse = documentSuccessFactory(
+export const GetProductsResponse = successResponseFactory(
   SuccessEntries.PRODUCT_LISETED,
   { products: z.array(CompleteProduct) },
 );
 
-export const GetProductByIdResponse = documentSuccessFactory(
+export const GetProductByIdResponse = successResponseFactory(
   SuccessEntries.PRODUCT_LISETED,
   { products: CompleteProduct },
 );
 
-export const PostProductResponse = documentSuccessFactory(
+export const PostProductResponse = successResponseFactory(
   SuccessEntries.PRODUCT_CREATED,
   { product: CompleteProduct },
 );
 
-export const DeleteProductByIdResponse = documentSuccessFactory(
+export const DeleteProductByIdResponse = successResponseFactory(
   SuccessEntries.PRODUCT_DELETED,
   { deleteCount: DeleteCountResponseItem, product: CompleteProduct },
 );
 
-export const NoProductFoundError = documentErrorFactory(
-  ErrorEntries.NO_PRODUCT,
-);
+export const NoProductFoundError = errorJsonFactory(ErrorEntries.NO_PRODUCT);
 
 export const ObjectIdSchema = z.string().regex(/^[a-f\d]{24}$/i);

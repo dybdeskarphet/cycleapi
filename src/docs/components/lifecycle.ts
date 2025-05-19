@@ -5,9 +5,9 @@ import {
   LRegression,
   MovingAverages,
 } from "../../types/lifecycle.types";
-import { documentSuccessFactory, MiniProductResponseItem } from "../utils";
+import { successResponseFactory, MiniProductResponseItem } from "../utils";
 
-export const MovingAveragesResponse = documentSuccessFactory(
+export const MovingAveragesResponse = successResponseFactory(
   SuccessEntries.OK_MOVING_AVERAGES,
   {
     product: MiniProductResponseItem,
@@ -15,7 +15,7 @@ export const MovingAveragesResponse = documentSuccessFactory(
   },
 );
 
-export const GrowthRatesResponse = documentSuccessFactory(
+export const GrowthRatesResponse = successResponseFactory(
   SuccessEntries.OK_GROWTH_RATES,
   {
     product: MiniProductResponseItem,
@@ -23,7 +23,7 @@ export const GrowthRatesResponse = documentSuccessFactory(
   },
 );
 
-export const AccelerationRatesResponse = documentSuccessFactory(
+export const AccelerationRatesResponse = successResponseFactory(
   SuccessEntries.OK_ACCELERATION_RATES,
   {
     product: MiniProductResponseItem,
@@ -31,7 +31,7 @@ export const AccelerationRatesResponse = documentSuccessFactory(
   },
 );
 
-export const LinearRegressionSlopesResponse = documentSuccessFactory(
+export const LinearRegressionSlopesResponse = successResponseFactory(
   SuccessEntries.OK_LINEAR_REGRESSION_SLOPES,
   {
     product: MiniProductResponseItem,
@@ -39,7 +39,7 @@ export const LinearRegressionSlopesResponse = documentSuccessFactory(
   },
 );
 
-export const PhasesResponse = documentSuccessFactory(SuccessEntries.OK_PHASES, {
+export const PhasesResponse = successResponseFactory(SuccessEntries.OK_PHASES, {
   product: MiniProductResponseItem,
   maturity_top: z.number(),
   maturity_bottom: z.number(),

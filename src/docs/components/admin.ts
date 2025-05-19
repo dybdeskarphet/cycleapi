@@ -3,7 +3,7 @@ import {
   ErrorEntries,
   SuccessEntries,
 } from "../../constants/messages.constants";
-import { documentErrorFactory, documentSuccessFactory } from "../utils";
+import { errorJsonFactory, successResponseFactory } from "../utils";
 import { Types } from "mongoose";
 import { IToken } from "../../types/token.types";
 
@@ -18,17 +18,15 @@ export const CompleteToken = z
     __v: z.number().default(0),
   });
 
-export const GenerateTokenResponse = documentSuccessFactory(
+export const GenerateTokenResponse = successResponseFactory(
   SuccessEntries.TOKEN_CREATED,
   {
     token: CompleteToken,
   },
 );
 
-export const InvalidTimeoutError = documentErrorFactory(
+export const InvalidTimeoutError = errorJsonFactory(
   ErrorEntries.INVALID_TIMEOUT,
 );
 
-export const UnauthorizedError = documentErrorFactory(
-  ErrorEntries.UNAUTHORIZED,
-);
+export const UnauthorizedError = errorJsonFactory(ErrorEntries.UNAUTHORIZED);

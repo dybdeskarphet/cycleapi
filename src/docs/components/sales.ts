@@ -5,8 +5,8 @@ import {
 } from "../../constants/messages.constants";
 import {
   DeleteCountResponseItem,
-  documentErrorFactory,
-  documentSuccessFactory,
+  errorJsonFactory,
+  successResponseFactory,
   MiniProductResponseItem,
 } from "../utils";
 import { Types } from "mongoose";
@@ -23,7 +23,7 @@ export const CompleteSale = z
     __v: z.number().default(0),
   });
 
-export const GetSalesResponse = documentSuccessFactory(
+export const GetSalesResponse = successResponseFactory(
   SuccessEntries.SALE_LISTED,
   {
     product: MiniProductResponseItem,
@@ -31,7 +31,7 @@ export const GetSalesResponse = documentSuccessFactory(
   },
 );
 
-export const PostSaleResponse = documentSuccessFactory(
+export const PostSaleResponse = successResponseFactory(
   SuccessEntries.SALE_CREATED,
   {
     product: MiniProductResponseItem,
@@ -39,7 +39,7 @@ export const PostSaleResponse = documentSuccessFactory(
   },
 );
 
-export const PostSaleRestoreResponse = documentSuccessFactory(
+export const PostSaleRestoreResponse = successResponseFactory(
   SuccessEntries.SALE_RESTORED,
   {
     product: MiniProductResponseItem,
@@ -47,7 +47,7 @@ export const PostSaleRestoreResponse = documentSuccessFactory(
   },
 );
 
-export const DeleteSaleByIdResponse = documentSuccessFactory(
+export const DeleteSaleByIdResponse = successResponseFactory(
   SuccessEntries.SALE_DELETED,
   {
     product: MiniProductResponseItem,
@@ -56,4 +56,4 @@ export const DeleteSaleByIdResponse = documentSuccessFactory(
   },
 );
 
-export const NoSaleFoundError = documentErrorFactory(ErrorEntries.NO_SALE);
+export const NoSaleFoundError = errorJsonFactory(ErrorEntries.NO_SALE);

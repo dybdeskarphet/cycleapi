@@ -4,7 +4,7 @@ import { ErrorEntries } from "../constants/messages.constants";
 import { Types } from "mongoose";
 import { ZodMediaTypeObject } from "@asteasolutions/zod-to-openapi";
 
-export const documentSuccessFactory = (
+export const successResponseFactory = (
   successEntry: SuccessEntry,
   data: ZodRawShape = {},
   state: boolean = true,
@@ -24,12 +24,22 @@ export const documentSuccessFactory = (
   };
 };
 
+// TODO: Better naming for these
+// TODO: Also, use string for errorEntry for custom messages, some http error responses can have multiple types of problems.
 export const errorResponseFactory = (
-  errorEntry: ErrorEntry,
+  errorEntryOrString: ErrorEntry | string,
   schemas: ZodTypeAny,
 ) => {
+  let description: string = "";
+
+  if (typeof errorEntryOrString === "string") {
+    description = errorEntryOrString as string;
+  } else {
+    description = (errorEntryOrString as ErrorEntry).message;
+  }
+
   return {
-    description: errorEntry.message,
+    description,
     content: {
       "application/json": {
         schema: schemas,
@@ -38,7 +48,7 @@ export const errorResponseFactory = (
   };
 };
 
-export const documentErrorFactory = (
+export const errorJsonFactory = (
   errorEntry: ErrorEntry,
   errors: boolean = false,
   success: boolean = false,
@@ -52,7 +62,7 @@ export const documentErrorFactory = (
   return errors ? error.extend({ errors: z.array(z.object({})) }) : error;
 };
 
-export const BadRequestZod = documentErrorFactory(ErrorEntries.ZOD_ERROR, true);
+export const BadRequestZod = errorJsonFactory(ErrorEntries.ZOD_ERROR, true);
 
 export const DeleteCountResponseItem = z.number().default(1);
 

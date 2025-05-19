@@ -113,7 +113,7 @@ export const deleteSaleByIdDocument: RouteConfig = {
   responses: {
     200: DeleteSaleByIdResponse,
     404: errorResponseFactory(
-      ErrorEntries.NO_PRODUCT,
+      "Product or sale not found.",
       z.union([NoProductFoundError, NoSaleFoundError]),
     ),
   },
