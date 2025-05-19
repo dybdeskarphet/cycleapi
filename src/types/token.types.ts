@@ -18,6 +18,6 @@ export namespace IToken {
 export namespace TokenRequestBody {
   export const Zod = IToken.Zod.pick({
     scopes: true,
-  }).extend({ timeoutMs: z.string() });
+  }).extend({ timeout: z.string() });
   export type TS = z.infer<typeof Zod>;
 }

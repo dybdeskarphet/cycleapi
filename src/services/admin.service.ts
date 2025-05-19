@@ -11,7 +11,7 @@ export const generateTokenService = async (tokenBody: TokenRequestBody.TS) => {
   // NOTE: vercel/ms doesn't have a validation system, but it
   // returns undefined if the string is not StringValue
   // so this is the only way to validate it.
-  const timeoutMs = ms(tokenBody.timeoutMs as StringValue);
+  const timeoutMs = ms(tokenBody.timeout as StringValue);
   if (!timeoutMs || timeoutMs <= 0) {
     throw new ApiError(StatusCodes.BAD_REQUEST, ErrorEntries.INVALID_TIMEOUT);
   }
