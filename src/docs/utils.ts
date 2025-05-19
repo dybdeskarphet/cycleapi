@@ -1,19 +1,41 @@
-import { z, ZodError, ZodIssueCode, ZodRawShape } from "zod";
+import { z, ZodObject, ZodRawShape, ZodTypeAny } from "zod";
 import { ErrorEntry, SuccessEntry } from "../types/express.types";
 import { ErrorEntries } from "../constants/messages.constants";
 import { Types } from "mongoose";
+import { ZodMediaTypeObject } from "@asteasolutions/zod-to-openapi";
 
 export const documentSuccessFactory = (
   successEntry: SuccessEntry,
   data: ZodRawShape = {},
   state: boolean = true,
 ) => {
-  return z.object({
-    success: z.boolean().default(state),
-    code: z.string().default(successEntry.code),
-    message: z.string().default(successEntry.message),
-    data: z.object(data),
-  });
+  return {
+    description: successEntry.message,
+    content: {
+      "application/json": {
+        schema: z.object({
+          success: z.boolean().default(state),
+          code: z.string().default(successEntry.code),
+          message: z.string().default(successEntry.message),
+          data: z.object(data),
+        }),
+      },
+    },
+  };
+};
+
+export const errorResponseFactory = (
+  errorEntry: ErrorEntry,
+  schemas: ZodTypeAny,
+) => {
+  return {
+    description: errorEntry.message,
+    content: {
+      "application/json": {
+        schema: schemas,
+      },
+    },
+  };
 };
 
 export const documentErrorFactory = (

@@ -19,7 +19,7 @@ import {
   ZodProductRequestBody,
 } from "../../types/product.types";
 import { z } from "zod";
-import { BadRequestZod } from "../utils";
+import { BadRequestZod, errorResponseFactory } from "../utils";
 
 extendZodWithOpenApi(z);
 
@@ -29,22 +29,8 @@ export const getProductsDocument: RouteConfig = {
   summary: "Get all the products",
   tags: ["Products"],
   responses: {
-    200: {
-      description: SuccessEntries.PRODUCT_LISETED.message,
-      content: {
-        "application/json": {
-          schema: GetProductsResponse,
-        },
-      },
-    },
-    404: {
-      description: ErrorEntries.NO_PRODUCT.message,
-      content: {
-        "application/json": {
-          schema: NoProductFoundError,
-        },
-      },
-    },
+    200: GetProductsResponse,
+    404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
   },
 };
 
@@ -64,22 +50,8 @@ export const postProductDocument: RouteConfig = {
     },
   },
   responses: {
-    201: {
-      description: SuccessEntries.PRODUCT_CREATED.message,
-      content: {
-        "application/json": {
-          schema: PostProductResponse,
-        },
-      },
-    },
-    400: {
-      description: ErrorEntries.ZOD_ERROR.message,
-      content: {
-        "application/json": {
-          schema: BadRequestZod,
-        },
-      },
-    },
+    201: PostProductResponse,
+    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
   },
 };
 
@@ -99,22 +71,8 @@ export const filterProductDocument: RouteConfig = {
     },
   },
   responses: {
-    200: {
-      description: SuccessEntries.PRODUCT_LISETED.message,
-      content: {
-        "application/json": {
-          schema: GetProductsResponse,
-        },
-      },
-    },
-    400: {
-      description: ErrorEntries.ZOD_ERROR.message,
-      content: {
-        "application/json": {
-          schema: BadRequestZod,
-        },
-      },
-    },
+    200: GetProductsResponse,
+    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
   },
 };
 
@@ -129,22 +87,8 @@ export const getProductByIdDocument: RouteConfig = {
     }),
   },
   responses: {
-    200: {
-      description: SuccessEntries.PRODUCT_LISETED.message,
-      content: {
-        "application/json": {
-          schema: GetProductByIdResponse,
-        },
-      },
-    },
-    404: {
-      description: ErrorEntries.NO_PRODUCT.message,
-      content: {
-        "application/json": {
-          schema: NoProductFoundError,
-        },
-      },
-    },
+    200: GetProductByIdResponse,
+    404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
   },
 };
 
@@ -159,21 +103,7 @@ export const deleteProductByIdDocument: RouteConfig = {
     }),
   },
   responses: {
-    200: {
-      description: SuccessEntries.PRODUCT_DELETED.message,
-      content: {
-        "application/json": {
-          schema: DeleteProductByIdResponse,
-        },
-      },
-    },
-    404: {
-      description: ErrorEntries.NO_PRODUCT.message,
-      content: {
-        "application/json": {
-          schema: NoProductFoundError,
-        },
-      },
-    },
+    200: DeleteProductByIdResponse,
+    404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
   },
 };

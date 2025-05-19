@@ -25,7 +25,7 @@ export const GenerateTokenResponse = documentSuccessFactory(
   },
 );
 
-export const InvalıdTimeoutError = documentErrorFactory(
+export const InvalidTimeoutError = documentErrorFactory(
   ErrorEntries.INVALID_TIMEOUT,
 );
 

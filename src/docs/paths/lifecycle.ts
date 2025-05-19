@@ -8,7 +8,7 @@ import {
   ErrorEntries,
   SuccessEntries,
 } from "../../constants/messages.constants";
-import { BadRequestZod } from "../utils";
+import { BadRequestZod, errorResponseFactory } from "../utils";
 import {
   AccelerationRatesResponse,
   GrowthRatesResponse,
@@ -46,22 +46,9 @@ export const getMovingAveragesDocument: RouteConfig = {
     },
   },
   responses: {
-    200: {
-      description: SuccessEntries.OK_MOVING_AVERAGES.message,
-      content: {
-        "application/json": {
-          schema: MovingAveragesResponse,
-        },
-      },
-    },
-    404: {
-      description: ErrorEntries.NO_PRODUCT.message,
-      content: {
-        "application/json": {
-          schema: z.union([NoProductFoundError, BadRequestZod]),
-        },
-      },
-    },
+    200: MovingAveragesResponse,
+    404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
+    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
   },
 };
 
@@ -87,22 +74,9 @@ export const getGrowthRatesDocument: RouteConfig = {
     },
   },
   responses: {
-    200: {
-      description: SuccessEntries.OK_GROWTH_RATES.message,
-      content: {
-        "application/json": {
-          schema: GrowthRatesResponse,
-        },
-      },
-    },
-    404: {
-      description: ErrorEntries.NO_PRODUCT.message,
-      content: {
-        "application/json": {
-          schema: z.union([NoProductFoundError, BadRequestZod]),
-        },
-      },
-    },
+    200: GrowthRatesResponse,
+    404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
+    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
   },
 };
 
@@ -128,22 +102,9 @@ export const getAccelerationRatesDocument: RouteConfig = {
     },
   },
   responses: {
-    200: {
-      description: SuccessEntries.OK_ACCELERATION_RATES.message,
-      content: {
-        "application/json": {
-          schema: AccelerationRatesResponse,
-        },
-      },
-    },
-    404: {
-      description: ErrorEntries.NO_PRODUCT.message,
-      content: {
-        "application/json": {
-          schema: z.union([NoProductFoundError, BadRequestZod]),
-        },
-      },
-    },
+    200: AccelerationRatesResponse,
+    404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
+    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
   },
 };
 
@@ -169,22 +130,9 @@ export const lrSlopesDocument: RouteConfig = {
     },
   },
   responses: {
-    200: {
-      description: SuccessEntries.OK_ACCELERATION_RATES.message,
-      content: {
-        "application/json": {
-          schema: LinearRegressionSlopesResponse,
-        },
-      },
-    },
-    404: {
-      description: ErrorEntries.NO_PRODUCT.message,
-      content: {
-        "application/json": {
-          schema: z.union([NoProductFoundError, BadRequestZod]),
-        },
-      },
-    },
+    200: LinearRegressionSlopesResponse,
+    404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
+    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
   },
 };
 
@@ -210,21 +158,8 @@ export const phasesDocument: RouteConfig = {
     },
   },
   responses: {
-    200: {
-      description: SuccessEntries.OK_PHASES.message,
-      content: {
-        "application/json": {
-          schema: PhasesResponse,
-        },
-      },
-    },
-    404: {
-      description: ErrorEntries.NO_PRODUCT.message,
-      content: {
-        "application/json": {
-          schema: z.union([NoProductFoundError, BadRequestZod]),
-        },
-      },
-    },
+    200: PhasesResponse,
+    404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
+    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
   },
 };

@@ -18,7 +18,7 @@ import {
 import { IntervalsWithInstantSchema } from "../../enums/intervals.enum";
 import { z } from "zod";
 import { ZodSaleRequestBody } from "../../types/sale.types";
-import { BadRequestZod } from "../utils";
+import { BadRequestZod, errorResponseFactory } from "../utils";
 
 extendZodWithOpenApi(z);
 
@@ -38,22 +38,8 @@ export const getSalesByIntervalDocument: RouteConfig = {
     }),
   },
   responses: {
-    200: {
-      description: SuccessEntries.SALE_LISTED.message,
-      content: {
-        "application/json": {
-          schema: GetSalesResponse,
-        },
-      },
-    },
-    404: {
-      description: ErrorEntries.NO_PRODUCT.message,
-      content: {
-        "application/json": {
-          schema: NoProductFoundError,
-        },
-      },
-    },
+    200: GetSalesResponse,
+    404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
   },
 };
 
@@ -78,22 +64,9 @@ export const postSaleDocument: RouteConfig = {
     }),
   },
   responses: {
-    201: {
-      description: SuccessEntries.PRODUCT_CREATED.message,
-      content: {
-        "application/json": {
-          schema: PostSaleResponse,
-        },
-      },
-    },
-    400: {
-      description: ErrorEntries.ZOD_ERROR.message,
-      content: {
-        "application/json": {
-          schema: BadRequestZod,
-        },
-      },
-    },
+    201: PostSaleResponse,
+    404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
+    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
   },
 };
 
@@ -118,22 +91,9 @@ export const postRestoreSalesDocument: RouteConfig = {
     }),
   },
   responses: {
-    200: {
-      description: SuccessEntries.SALE_RESTORED.message,
-      content: {
-        "application/json": {
-          schema: PostSaleRestoreResponse,
-        },
-      },
-    },
-    400: {
-      description: ErrorEntries.ZOD_ERROR.message,
-      content: {
-        "application/json": {
-          schema: BadRequestZod,
-        },
-      },
-    },
+    200: PostSaleRestoreResponse,
+    404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
+    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
   },
 };
 
@@ -151,21 +111,10 @@ export const deleteSaleByIdDocument: RouteConfig = {
     }),
   },
   responses: {
-    200: {
-      description: SuccessEntries.PRODUCT_DELETED.message,
-      content: {
-        "application/json": {
-          schema: DeleteSaleByIdResponse,
-        },
-      },
-    },
-    404: {
-      description: ErrorEntries.NO_PRODUCT.message,
-      content: {
-        "application/json": {
-          schema: z.union([NoProductFoundError, NoSaleFoundError]),
-        },
-      },
-    },
+    200: DeleteSaleByIdResponse,
+    404: errorResponseFactory(
+      ErrorEntries.NO_PRODUCT,
+      z.union([NoProductFoundError, NoSaleFoundError]),
+    ),
   },
 };

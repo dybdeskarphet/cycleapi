@@ -10,9 +10,10 @@ import {
 } from "../../constants/messages.constants";
 import {
   GenerateTokenResponse,
-  InvalıdTimeoutError,
+  InvalidTimeoutError,
   UnauthorizedError,
 } from "../components/admin";
+import { errorResponseFactory } from "../utils";
 
 extendZodWithOpenApi(z);
 
@@ -38,29 +39,11 @@ export const postGenerateTokenDocument: RouteConfig = {
     },
   },
   responses: {
-    200: {
-      description: SuccessEntries.TOKEN_CREATED.message,
-      content: {
-        "application/json": {
-          schema: GenerateTokenResponse,
-        },
-      },
-    },
-    400: {
-      description: ErrorEntries.INVALID_TIMEOUT.message,
-      content: {
-        "application/json": {
-          schema: InvalıdTimeoutError,
-        },
-      },
-    },
-    401: {
-      description: ErrorEntries.UNAUTHORIZED.message,
-      content: {
-        "application/json": {
-          schema: UnauthorizedError,
-        },
-      },
-    },
+    200: GenerateTokenResponse,
+    400: errorResponseFactory(
+      ErrorEntries.INVALID_TIMEOUT,
+      InvalidTimeoutError,
+    ),
+    401: errorResponseFactory(ErrorEntries.UNAUTHORIZED, UnauthorizedError),
   },
 };
