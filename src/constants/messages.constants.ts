@@ -1,4 +1,4 @@
-import { UNAUTHORIZED } from "http-status-codes";
+import { INSUFFICIENT_STORAGE, UNAUTHORIZED } from "http-status-codes";
 
 export const SuccessEntries = {
   OK_MOVING_AVERAGES: {
@@ -56,6 +56,11 @@ export const ErrorEntries = {
   INVALID_ID: {
     code: "INVALID_ID",
     message: "The provided document ID is invalid.",
+  },
+  INVALID_TOKEN: { code: "INVALID_TOKEN", message: "Invalid API Token." },
+  INSUFFICIENT_PERMISSIONS: {
+    code: "INSUFFICIENT_PERMISSIONS",
+    message: "You don't have the permission to access this endpoint.",
   },
   ZOD_ERROR: {
     code: "ZOD_ERROR",
