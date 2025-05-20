@@ -6,7 +6,11 @@ import {
   ErrorEntries,
   SuccessEntries,
 } from "../../constants/messages.constants";
-import { NoProductFoundError, ObjectIdSchema } from "../components/products";
+import {
+  NoProductFoundError,
+  ObjectIdSchema,
+  ProductIDParam,
+} from "../components/products";
 import {
   CompleteSale,
   DeleteSaleByIdResponse,
@@ -18,7 +22,11 @@ import {
 import { IntervalsWithInstantSchema } from "../../enums/intervals.enum";
 import { z } from "zod";
 import { ZodSaleRequestBody } from "../../types/sale.types";
-import { BadRequestZod, errorResponseFactory } from "../utils";
+import {
+  BadRequestZod,
+  bodyRequestFactory,
+  errorResponseFactory,
+} from "../utils";
 
 extendZodWithOpenApi(z);
 
@@ -28,10 +36,7 @@ export const getSalesByIntervalDocument: RouteConfig = {
   summary: "Get sales by an interval",
   tags: ["Sales"],
   request: {
-    params: z.object({
-      productId: ObjectIdSchema.openapi({
-        param: { name: "productId", in: "path" },
-      }),
+    params: ProductIDParam.extend({
       interval: IntervalsWithInstantSchema.openapi({
         param: { name: "interval", in: "path" },
       }),
@@ -49,19 +54,8 @@ export const postSaleDocument: RouteConfig = {
   summary: "Add a new sale by the product ID",
   tags: ["Sales"],
   request: {
-    body: {
-      content: {
-        "application/json": {
-          schema: ZodSaleRequestBody,
-        },
-      },
-      required: true,
-    },
-    params: z.object({
-      productId: ObjectIdSchema.openapi({
-        param: { name: "productId", in: "path" },
-      }),
-    }),
+    body: bodyRequestFactory(ZodSaleRequestBody),
+    params: ProductIDParam,
   },
   responses: {
     201: PostSaleResponse,
@@ -76,19 +70,8 @@ export const postRestoreSalesDocument: RouteConfig = {
   summary: "Restore old sales for a product",
   tags: ["Sales"],
   request: {
-    body: {
-      content: {
-        "application/json": {
-          schema: z.array(CompleteSale),
-        },
-      },
-      required: true,
-    },
-    params: z.object({
-      productId: ObjectIdSchema.openapi({
-        param: { name: "productId", in: "path" },
-      }),
-    }),
+    body: bodyRequestFactory(z.array(CompleteSale)),
+    params: ProductIDParam,
   },
   responses: {
     200: PostSaleRestoreResponse,
@@ -103,10 +86,7 @@ export const deleteSaleByIdDocument: RouteConfig = {
   summary: "Delete a sale by its ID",
   tags: ["Sales"],
   request: {
-    params: z.object({
-      productId: ObjectIdSchema.openapi({
-        param: { name: "productId", in: "path" },
-      }),
+    params: ProductIDParam.extend({
       saleId: ObjectIdSchema.openapi({ param: { name: "saleId", in: "path" } }),
     }),
   },

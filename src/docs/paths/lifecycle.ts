@@ -3,12 +3,20 @@ import {
   RouteConfig,
 } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
-import { NoProductFoundError, ObjectIdSchema } from "../components/products";
+import {
+  NoProductFoundError,
+  ObjectIdSchema,
+  ProductIDParam,
+} from "../components/products";
 import {
   ErrorEntries,
   SuccessEntries,
 } from "../../constants/messages.constants";
-import { BadRequestZod, errorResponseFactory } from "../utils";
+import {
+  BadRequestZod,
+  bodyRequestFactory,
+  errorResponseFactory,
+} from "../utils";
 import {
   AccelerationRatesResponse,
   GrowthRatesResponse,
@@ -26,24 +34,12 @@ extendZodWithOpenApi(z);
 
 export const getMovingAveragesDocument: RouteConfig = {
   method: "post",
-  path: "/lifecycle/{id}/moving-averages",
+  path: "/lifecycle/{productId}/moving-averages",
   summary: "Get the moving averages of sales of a product by its ID",
   tags: ["Lifecycle"],
   request: {
-    params: z.object({
-      id: ObjectIdSchema.openapi({
-        description: "Product ID",
-        param: { name: "id", in: "path" },
-      }),
-    }),
-    body: {
-      content: {
-        "application/json": {
-          schema: MovingAverages.RequestBody,
-        },
-      },
-      required: true,
-    },
+    params: ProductIDParam,
+    body: bodyRequestFactory(MovingAverages.RequestBody),
   },
   responses: {
     200: MovingAveragesResponse,
@@ -54,24 +50,12 @@ export const getMovingAveragesDocument: RouteConfig = {
 
 export const getGrowthRatesDocument: RouteConfig = {
   method: "post",
-  path: "/lifecycle/{id}/growth-rates",
+  path: "/lifecycle/{productId}/growth-rates",
   summary: "Get the growth rates of sales of a product by its ID",
   tags: ["Lifecycle"],
   request: {
-    params: z.object({
-      id: ObjectIdSchema.openapi({
-        description: "Product ID",
-        param: { name: "id", in: "path" },
-      }),
-    }),
-    body: {
-      content: {
-        "application/json": {
-          schema: GrowthRate.RequestBody,
-        },
-      },
-      required: true,
-    },
+    params: ProductIDParam,
+    body: bodyRequestFactory(GrowthRate.RequestBody),
   },
   responses: {
     200: GrowthRatesResponse,
@@ -82,24 +66,12 @@ export const getGrowthRatesDocument: RouteConfig = {
 
 export const getAccelerationRatesDocument: RouteConfig = {
   method: "post",
-  path: "/lifecycle/{id}/acceleration-rates",
+  path: "/lifecycle/{productId}/acceleration-rates",
   summary: "Get the acceleration rates of sales of a product by its ID",
   tags: ["Lifecycle"],
   request: {
-    params: z.object({
-      id: ObjectIdSchema.openapi({
-        description: "Product ID",
-        param: { name: "id", in: "path" },
-      }),
-    }),
-    body: {
-      content: {
-        "application/json": {
-          schema: GrowthRate.RequestBody,
-        },
-      },
-      required: true,
-    },
+    params: ProductIDParam,
+    body: bodyRequestFactory(GrowthRate.RequestBody),
   },
   responses: {
     200: AccelerationRatesResponse,
@@ -110,24 +82,12 @@ export const getAccelerationRatesDocument: RouteConfig = {
 
 export const lrSlopesDocument: RouteConfig = {
   method: "post",
-  path: "/lifecycle/{id}/lr-slopes",
+  path: "/lifecycle/{productId}/lr-slopes",
   summary: "Get the linear regression slopes of sales of a product by its ID",
   tags: ["Lifecycle"],
   request: {
-    params: z.object({
-      id: ObjectIdSchema.openapi({
-        description: "Product ID",
-        param: { name: "id", in: "path" },
-      }),
-    }),
-    body: {
-      content: {
-        "application/json": {
-          schema: LRegression.RequestBody,
-        },
-      },
-      required: true,
-    },
+    params: ProductIDParam,
+    body: bodyRequestFactory(LRegression.RequestBody),
   },
   responses: {
     200: LinearRegressionSlopesResponse,
@@ -138,24 +98,12 @@ export const lrSlopesDocument: RouteConfig = {
 
 export const phasesDocument: RouteConfig = {
   method: "post",
-  path: "/lifecycle/{id}/phases-with-lr",
+  path: "/lifecycle/{productId}/phases-with-lr",
   summary: "Get the phases of a product by its ID",
   tags: ["Lifecycle"],
   request: {
-    params: z.object({
-      id: ObjectIdSchema.openapi({
-        description: "Product ID",
-        param: { name: "id", in: "path" },
-      }),
-    }),
-    body: {
-      content: {
-        "application/json": {
-          schema: LRegression.RequestBodyWithSensitivity,
-        },
-      },
-      required: true,
-    },
+    params: ProductIDParam,
+    body: bodyRequestFactory(LRegression.RequestBodyWithSensitivity),
   },
   responses: {
     200: PhasesResponse,

@@ -47,3 +47,10 @@ export const DeleteProductByIdResponse = successResponseFactory(
 export const NoProductFoundError = errorJsonFactory(ErrorEntries.NO_PRODUCT);
 
 export const ObjectIdSchema = z.string().regex(/^[a-f\d]{24}$/i);
+
+export const ProductIDParam = z.object({
+  productId: ObjectIdSchema.openapi({
+    description: "Product ID",
+    param: { name: "productId", in: "path" },
+  }),
+});

@@ -70,3 +70,17 @@ export const MiniProductResponseItem = z.object({
   _id: z.instanceof(Types.ObjectId),
   name: z.string(),
 });
+
+export const bodyRequestFactory = (
+  schema: ZodTypeAny,
+  required: boolean = true,
+) => {
+  return {
+    content: {
+      "application/json": {
+        schema,
+      },
+    },
+    required: true,
+  };
+};

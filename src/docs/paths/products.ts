@@ -13,13 +13,18 @@ import {
   NoProductFoundError,
   ObjectIdSchema,
   PostProductResponse,
+  ProductIDParam,
 } from "../components/products";
 import {
   ZodProductFilterBody,
   ZodProductRequestBody,
 } from "../../types/product.types";
 import { z } from "zod";
-import { BadRequestZod, errorResponseFactory } from "../utils";
+import {
+  BadRequestZod,
+  bodyRequestFactory,
+  errorResponseFactory,
+} from "../utils";
 
 extendZodWithOpenApi(z);
 
@@ -40,14 +45,7 @@ export const postProductDocument: RouteConfig = {
   summary: "Add a new product to the DB",
   tags: ["Products"],
   request: {
-    body: {
-      content: {
-        "application/json": {
-          schema: ZodProductRequestBody,
-        },
-      },
-      required: true,
-    },
+    body: bodyRequestFactory(ZodProductRequestBody),
   },
   responses: {
     201: PostProductResponse,
@@ -61,14 +59,7 @@ export const filterProductDocument: RouteConfig = {
   summary: "Get products by property filtering",
   tags: ["Products"],
   request: {
-    body: {
-      content: {
-        "application/json": {
-          schema: ZodProductFilterBody,
-        },
-      },
-      required: true,
-    },
+    body: bodyRequestFactory(ZodProductFilterBody),
   },
   responses: {
     200: GetProductsResponse,
@@ -78,13 +69,11 @@ export const filterProductDocument: RouteConfig = {
 
 export const getProductByIdDocument: RouteConfig = {
   method: "get",
-  path: "/products/{id}",
+  path: "/products/{productId}",
   summary: "Get product by its ID",
   tags: ["Products"],
   request: {
-    params: z.object({
-      id: ObjectIdSchema.openapi({ param: { name: "id", in: "path" } }),
-    }),
+    params: ProductIDParam,
   },
   responses: {
     200: GetProductByIdResponse,
@@ -94,13 +83,11 @@ export const getProductByIdDocument: RouteConfig = {
 
 export const deleteProductByIdDocument: RouteConfig = {
   method: "delete",
-  path: "/products/{id}",
+  path: "/products/{productId}",
   summary: "Delete a product by its ID",
   tags: ["Products"],
   request: {
-    params: z.object({
-      id: ObjectIdSchema.openapi({ param: { name: "id", in: "path" } }),
-    }),
+    params: ProductIDParam,
   },
   responses: {
     200: DeleteProductByIdResponse,
