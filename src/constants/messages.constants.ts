@@ -1,5 +1,3 @@
-import { INSUFFICIENT_STORAGE, UNAUTHORIZED } from "http-status-codes";
-
 export const SuccessEntries = {
   OK_MOVING_AVERAGES: {
     code: "OK_MOVING_AVERAGES",
