@@ -15,7 +15,7 @@ import {
 import {
   RestoreSaleInputArraySchema,
   SaleDocument,
-  ZodSaleRequestBody,
+  SaleRequestBody,
 } from "../types/sale.types";
 import { convertSalesDateRange } from "../utils/sale.utils";
 import {
@@ -58,7 +58,7 @@ export const getSalesByProductIdController = withController(
 export const postNewSaleController = withController(
   async (req: Request, res: Response) => {
     const product = await getProductByIdService(req.params.productId);
-    const body = handleZodParsed(ZodSaleRequestBody.safeParse(req.body));
+    const body = handleZodParsed(SaleRequestBody.Zod.safeParse(req.body));
     const sale = await createSaleService(product, body);
 
     sendSuccess(
@@ -94,7 +94,7 @@ export const deleteSaleByIdController = withController(
 export const restoreOldSalesController = withController(
   async (req: Request, res: Response) => {
     const body = handleZodParsed(
-      RestoreSaleInputArraySchema.safeParse(req.body),
+      RestoreSaleInputArraySchema.Zod.safeParse(req.body),
     );
 
     const product = await getProductByIdService(req.params.productId, [

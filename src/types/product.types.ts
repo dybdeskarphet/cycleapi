@@ -24,31 +24,36 @@ export interface IProduct {
 
 export type ProductDocument = HydratedDocument<IProduct>;
 
-export const ZodProductRequestBody = z.object({
-  name: z.string(),
-  category: z.string(),
-  launchDate: z.string(),
-  price: z.number(),
-  region: z.nativeEnum(Region).optional(),
-  sales: z
-    .array(z.instanceof(Types.ObjectId).or(z.instanceof(Sale)))
-    .optional(),
-});
-export type ProductRequestBody = z.infer<typeof ZodProductRequestBody>;
-
-export const ZodProductFilterBody = z
-  .object({
-    _id: z.instanceof(Types.ObjectId),
+export namespace ProductRequestBody {
+  export const Zod = z.object({
     name: z.string(),
     category: z.string(),
+    launchDate: z.string(),
     price: z.number(),
-    launchDate: z.date(),
-    region: z.nativeEnum(Region),
-    createdAt: z.date(),
-    updatedAt: z.date(),
-  })
-  .partial();
-export type ProductFilterBody = z.infer<typeof ZodProductFilterBody>;
+    region: z.nativeEnum(Region).optional(),
+    sales: z
+      .array(z.instanceof(Types.ObjectId).or(z.instanceof(Sale)))
+      .optional(),
+  });
+
+  export type TS = z.infer<typeof Zod>;
+}
+
+export namespace ProductFilterBody {
+  export const Zod = z
+    .object({
+      _id: z.instanceof(Types.ObjectId),
+      name: z.string(),
+      category: z.string(),
+      price: z.number(),
+      launchDate: z.date(),
+      region: z.nativeEnum(Region),
+      createdAt: z.date(),
+      updatedAt: z.date(),
+    })
+    .partial();
+  export type TS = z.infer<typeof Zod>;
+}
 
 export const ZodProductPopulatableFields = z.array(z.enum(["sales"]));
 export type ProductPopulatableFields = z.infer<

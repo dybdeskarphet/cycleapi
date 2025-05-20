@@ -21,7 +21,7 @@ import {
 } from "../components/sales";
 import { IntervalsWithInstantSchema } from "../../enums/intervals.enum";
 import { z } from "zod";
-import { ZodSaleRequestBody } from "../../types/sale.types";
+import { SaleRequestBody } from "../../types/sale.types";
 import {
   BadRequestZod,
   bodyRequestFactory,
@@ -54,7 +54,7 @@ export const postSaleDocument: RouteConfig = {
   summary: "Add a new sale by the product ID",
   tags: ["Sales"],
   request: {
-    body: bodyRequestFactory(ZodSaleRequestBody),
+    body: bodyRequestFactory(SaleRequestBody.Zod),
     params: ProductIDParam,
   },
   responses: {

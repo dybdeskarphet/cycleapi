@@ -14,7 +14,7 @@ export const sortSalesByTime = (sales: SaleDocument[]) => {
 export const createMiniSale = (
   amount: ISale["amount"],
   createdAt: string,
-): IMiniSale => {
+): IMiniSale.TS => {
   return {
     amount,
     createdAt,
@@ -22,7 +22,7 @@ export const createMiniSale = (
 };
 
 export const calculateSalesDateInterval = async (
-  sortedSales: IMiniSale[] | SaleDocument[],
+  sortedSales: IMiniSale.TS[] | SaleDocument[],
   interval: string,
 ) => {
   let tempArray = [sortedSales[0]];
@@ -66,9 +66,9 @@ export const calculateSalesDateInterval = async (
 };
 
 export const convertSalesDateRange = async (
-  sales: IMiniSale[] | SaleDocument[],
+  sales: IMiniSale.TS[] | SaleDocument[],
   interval: Intervals,
-): Promise<IMiniSale[]> => {
+): Promise<IMiniSale.TS[]> => {
   let sortedSales = sales.sort(
     (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
   );

@@ -16,7 +16,7 @@ export const errorIfInvalidInterval = async (interval: string) => {
 };
 
 export const getDateOfSale = (
-  minisale: IMiniSale | SaleDocument,
+  minisale: IMiniSale.TS | SaleDocument,
   date: string,
 ): number => {
   switch (date) {

@@ -15,7 +15,7 @@ import {
 import { ErrorEntries } from "../constants/messages.constants";
 
 export const movingAveragesOfSalesService = async (
-  sales: IMiniSale[],
+  sales: IMiniSale.TS[],
   windowSize: number,
   weight: boolean,
 ): Promise<MovingAverages.Unit[]> => {
@@ -44,7 +44,7 @@ export const movingAveragesOfSalesService = async (
 };
 
 export const growthRateService = async (
-  sales: IMiniSale[],
+  sales: IMiniSale.TS[],
 ): Promise<GrowthRate.Unit[]> => {
   let growthRates: GrowthRate.Unit[] = [];
 
@@ -78,7 +78,7 @@ export const salesAccelerationService = async (
 };
 
 export const movingLinearRegressionSlopeService = async (
-  sales: IMiniSale[],
+  sales: IMiniSale.TS[],
   windowSize: number,
   interval: string,
 ) => {
@@ -105,7 +105,7 @@ export const movingLinearRegressionSlopeService = async (
 };
 
 export const groupedLinearRegressionSlopeService = async (
-  sales: IMiniSale[],
+  sales: IMiniSale.TS[],
   windowSize: number,
   interval: string,
   sensitivity: number,

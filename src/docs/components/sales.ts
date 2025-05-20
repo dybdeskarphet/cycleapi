@@ -10,7 +10,7 @@ import {
   MiniProductResponseItem,
 } from "../utils";
 import { Types } from "mongoose";
-import { ZodIMiniSale, ZodISale } from "../../types/sale.types";
+import { IMiniSale, ZodISale } from "../../types/sale.types";
 
 export const CompleteSale = z
   .object({
@@ -27,7 +27,7 @@ export const GetSalesResponse = successResponseFactory(
   SuccessEntries.SALE_LISTED,
   {
     product: MiniProductResponseItem,
-    sales: z.array(z.union([CompleteSale, ZodIMiniSale])),
+    sales: z.array(z.union([CompleteSale, IMiniSale.Zod])),
   },
 );
 

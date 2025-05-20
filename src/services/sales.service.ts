@@ -3,7 +3,7 @@ import { ApiError } from "../errors/api.error";
 import { validateAndReturnObjectId } from "../utils/mongoose.utils";
 import { Types } from "mongoose";
 import {
-  RestoreSaleInputArraySchemaType,
+  RestoreSaleInputArraySchema,
   SaleDocument,
   SaleRequestBody,
 } from "../types/sale.types";
@@ -23,7 +23,7 @@ export const getSaleByIdService = async (id: string): Promise<SaleDocument> => {
 
 export const createSaleService = async (
   product: ProductDocument,
-  requestBody: SaleRequestBody,
+  requestBody: SaleRequestBody.TS,
 ) => {
   const unit = new Sale({ product: product._id, ...requestBody });
   await unit.save();
@@ -62,7 +62,7 @@ export const deleteSaleService = async (
 
 export const deleteAllSalesAndRestoreService = async (
   product: ProductDocument,
-  saleInputs: RestoreSaleInputArraySchemaType,
+  saleInputs: RestoreSaleInputArraySchema.TS,
 ) => {
   await Sale.deleteMany({ _id: { $in: product.sales } });
   const newSalesWithProductId = saleInputs.map((sale) => ({

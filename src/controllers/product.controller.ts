@@ -11,15 +11,12 @@ import {
   withController,
 } from "../utils/express.utils";
 import { StatusCodes } from "http-status-codes";
-import {
-  ZodProductFilterBody,
-  ZodProductRequestBody,
-} from "../types/product.types";
+import { ProductFilterBody, ProductRequestBody } from "../types/product.types";
 import { SuccessEntries } from "../constants/messages.constants";
 
 export const postProductController = withController(
   async (req: Request, res: Response) => {
-    const data = handleZodParsed(ZodProductRequestBody.safeParse(req.body));
+    const data = handleZodParsed(ProductRequestBody.Zod.safeParse(req.body));
     const product = await createProductService(data);
     sendSuccess(
       res,
@@ -33,7 +30,7 @@ export const postProductController = withController(
 export const getProductsController = (hasFilter: boolean = false) => {
   return withController(async (req: Request, res: Response) => {
     const body = hasFilter
-      ? handleZodParsed(ZodProductFilterBody.safeParse(req.body))
+      ? handleZodParsed(ProductFilterBody.Zod.safeParse(req.body))
       : {};
 
     const products = await getProductService(body);

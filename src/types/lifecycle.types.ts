@@ -1,6 +1,4 @@
 import { Intervals } from "../enums/intervals.enum";
-import { withController } from "../utils/express.utils";
-import { ZodIMiniSale } from "./sale.types";
 import { z } from "zod";
 
 export namespace MovingAverages {

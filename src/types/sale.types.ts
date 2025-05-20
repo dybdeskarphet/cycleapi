@@ -19,38 +19,43 @@ export interface ISale {
   updatedAt: Date;
 }
 
-export const ZodSaleRequestBody = z.object({
-  amount: z.number().min(1),
-  customPrice: z.number().min(1).optional(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
-});
-
-export type SaleRequestBody = z.infer<typeof ZodSaleRequestBody>;
-
 export type SaleDocument = HydratedDocument<ISale>;
 
-export const ZodIMiniSale = z.object({
-  amount: z.number(),
-  createdAt: z.string(),
-});
+export namespace SaleRequestBody {
+  export const Zod = z.object({
+    amount: z.number().min(1),
+    customPrice: z.number().min(1).optional(),
+    createdAt: z.string().optional(),
+    updatedAt: z.string().optional(),
+  });
 
-export type IMiniSale = z.infer<typeof ZodIMiniSale>;
+  export type TS = z.infer<typeof Zod>;
+}
 
-export const RestoreSaleInputSchema = z
-  .object({
-    _id: z.instanceof(Types.ObjectId).optional(),
+export namespace IMiniSale {
+  export const Zod = z.object({
     amount: z.number(),
-    customPrice: z.number().optional(),
-    createdAt: z.string().datetime(),
-    updatedAt: z.string().datetime(),
-  })
-  .passthrough();
+    createdAt: z.string(),
+  });
 
-export const RestoreSaleInputArraySchema = z.array(RestoreSaleInputSchema);
+  export type TS = z.infer<typeof Zod>;
+}
 
-export type RestoreSaleInputSchemaType = z.infer<typeof RestoreSaleInputSchema>;
+export namespace RestoreSaleInputSchema {
+  export const Zod = z
+    .object({
+      _id: z.instanceof(Types.ObjectId).optional(),
+      amount: z.number(),
+      customPrice: z.number().optional(),
+      createdAt: z.string().datetime(),
+      updatedAt: z.string().datetime(),
+    })
+    .passthrough();
 
-export type RestoreSaleInputArraySchemaType = z.infer<
-  typeof RestoreSaleInputArraySchema
->;
+  export type TS = z.infer<typeof Zod>;
+}
+
+export namespace RestoreSaleInputArraySchema {
+  export const Zod = z.array(RestoreSaleInputSchema.Zod);
+  export type TS = z.infer<typeof Zod>;
+}

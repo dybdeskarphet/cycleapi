@@ -4,7 +4,7 @@ import { convertIntervalDateToISODate } from "./time.utils";
 import { LRegression } from "../types/lifecycle.types";
 
 export const calculateWeightedAverageSales = async (
-  slice: IMiniSale[],
+  slice: IMiniSale.TS[],
 ): Promise<number> => {
   return (
     slice.reduce((acc, val, index) => {
@@ -16,13 +16,13 @@ export const calculateWeightedAverageSales = async (
 };
 
 export const calculateAverageSales = async (
-  slice: IMiniSale[],
+  slice: IMiniSale.TS[],
 ): Promise<number> => {
   return slice.reduce((acc, val) => acc + val.amount, 0) / slice.length;
 };
 
 export const getLinearRegressionSlopeOfSales = async (
-  sales: IMiniSale[],
+  sales: IMiniSale.TS[],
   interval: string,
 ) => {
   let mean_x = 0;

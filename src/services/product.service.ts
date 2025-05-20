@@ -12,7 +12,7 @@ import { handleZodParsed } from "../utils/express.utils";
 import { validateAndReturnObjectId } from "../utils/mongoose.utils";
 import { StatusCodes } from "http-status-codes";
 
-const getProductService = async (filters: ProductFilterBody = {}) => {
+const getProductService = async (filters: ProductFilterBody.TS = {}) => {
   const result = await Product.find(filters).exec();
   if (!result) {
     throw new ApiError(StatusCodes.NOT_FOUND, ErrorEntries.NO_PRODUCT);
@@ -40,7 +40,9 @@ const getProductByIdService = async (
   return product;
 };
 
-const createProductService = async (productRequestBody: ProductRequestBody) => {
+const createProductService = async (
+  productRequestBody: ProductRequestBody.TS,
+) => {
   const newProduct = new Product(productRequestBody);
   await newProduct.save();
   return newProduct;

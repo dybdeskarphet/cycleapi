@@ -16,8 +16,8 @@ import {
   ProductIDParam,
 } from "../components/products";
 import {
-  ZodProductFilterBody,
-  ZodProductRequestBody,
+  ProductFilterBody,
+  ProductRequestBody,
 } from "../../types/product.types";
 import { z } from "zod";
 import {
@@ -45,7 +45,7 @@ export const postProductDocument: RouteConfig = {
   summary: "Add a new product to the DB",
   tags: ["Products"],
   request: {
-    body: bodyRequestFactory(ZodProductRequestBody),
+    body: bodyRequestFactory(ProductRequestBody.Zod),
   },
   responses: {
     201: PostProductResponse,
@@ -59,7 +59,7 @@ export const filterProductDocument: RouteConfig = {
   summary: "Get products by property filtering",
   tags: ["Products"],
   request: {
-    body: bodyRequestFactory(ZodProductFilterBody),
+    body: bodyRequestFactory(ProductFilterBody.Zod),
   },
   responses: {
     200: GetProductsResponse,
