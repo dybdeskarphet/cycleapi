@@ -22,8 +22,8 @@ export interface ISale {
 export const ZodSaleRequestBody = z.object({
   amount: z.number().min(1),
   customPrice: z.number().min(1).optional(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 });
 
 export type SaleRequestBody = z.infer<typeof ZodSaleRequestBody>;
