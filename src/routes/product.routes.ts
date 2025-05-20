@@ -18,12 +18,12 @@ const router = express.Router();
 
 router.post("/", requireScope([Scopes.write_products]), postProductController);
 router.get(
-  "/:id",
+  "/:productId",
   requireScope([Scopes.read_products]),
   getProductByIdController,
 );
 router.delete(
-  "/:id",
+  "/:productId",
   requireScope([Scopes.read_products, Scopes.delete_products]),
   deleteProductByIdController,
 );
@@ -34,12 +34,12 @@ router.post(
   getProductsController(true),
 );
 router.get(
-  "/:id/sales/:interval",
+  "/:productId/sales/:interval",
   requireScope([Scopes.read_sales]),
   getSalesByProductIdController,
 );
 router.post(
-  "/:id/sales",
+  "/:productId/sales",
   requireScope([Scopes.write_sales]),
   postNewSaleController,
 );

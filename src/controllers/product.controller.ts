@@ -44,14 +44,14 @@ export const getProductsController = (hasFilter: boolean = false) => {
 
 export const getProductByIdController = withController(
   async (req: Request, res: Response) => {
-    const product = await getProductByIdService(req.params.id);
+    const product = await getProductByIdService(req.params.productId);
     sendSuccess(res, { product }, SuccessEntries.PRODUCT_LISETED);
   },
 );
 
 export const deleteProductByIdController = withController(
   async (req: Request, res: Response) => {
-    const product = await getProductByIdService(req.params.id);
+    const product = await getProductByIdService(req.params.productId);
     const deleteCount = await deleteProductService(product);
     sendSuccess(res, { deleteCount, product }, SuccessEntries.PRODUCT_DELETED);
   },

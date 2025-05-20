@@ -23,7 +23,9 @@ import { SuccessEntries } from "../constants/messages.constants";
 
 export const getMovingAveragesController = withController(
   async (req: Request, res: Response) => {
-    const product = await getProductByIdService(req.params.id, ["sales"]);
+    const product = await getProductByIdService(req.params.productId, [
+      "sales",
+    ]);
     let data = handleZodParsed(MovingAverages.RequestBody.safeParse(req.body));
 
     const salesInterval = await convertSalesDateRange(
@@ -50,7 +52,9 @@ export const getMovingAveragesController = withController(
 
 export const getGrowthRateController = withController(
   async (req: Request, res: Response) => {
-    const product = await getProductByIdService(req.params.id, ["sales"]);
+    const product = await getProductByIdService(req.params.productId, [
+      "sales",
+    ]);
     const data = handleZodParsed(GrowthRate.RequestBody.safeParse(req.body));
 
     const salesInterval = await convertSalesDateRange(
@@ -73,7 +77,9 @@ export const getGrowthRateController = withController(
 
 export const getSalesAccelerationController = withController(
   async (req: Request, res: Response) => {
-    const product = await getProductByIdService(req.params.id, ["sales"]);
+    const product = await getProductByIdService(req.params.productId, [
+      "sales",
+    ]);
     const data = handleZodParsed(GrowthRate.RequestBody.safeParse(req.body));
 
     const salesInterval = await convertSalesDateRange(
@@ -98,7 +104,9 @@ export const getSalesAccelerationController = withController(
 export const getMovingLinearRegressionSlopesController = withController(
   async (req: Request, res: Response) => {
     const data = handleZodParsed(LRegression.RequestBody.safeParse(req.body));
-    const product = await getProductByIdService(req.params.id, ["sales"]);
+    const product = await getProductByIdService(req.params.productId, [
+      "sales",
+    ]);
     const salesInterval = await convertSalesDateRange(
       product.sales as SaleDocument[],
       data.interval,
@@ -127,7 +135,9 @@ export const getGroupedLinearRegressionSlopesController = withController(
       LRegression.RequestBodyWithSensitivity.safeParse(req.body),
     );
 
-    const product = await getProductByIdService(req.params.id, ["sales"]);
+    const product = await getProductByIdService(req.params.productId, [
+      "sales",
+    ]);
 
     const salesInterval = await convertSalesDateRange(
       product.sales as SaleDocument[],

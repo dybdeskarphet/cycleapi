@@ -27,7 +27,9 @@ import { SuccessEntries } from "../constants/messages.constants";
 
 export const getSalesByProductIdController = withController(
   async (req: Request, res: Response) => {
-    const product = await getProductByIdService(req.params.id, ["sales"]);
+    const product = await getProductByIdService(req.params.productId, [
+      "sales",
+    ]);
     let sales = [];
     let interval = handleZodParsed(
       IntervalsWithInstantSchema.safeParse(req.params.interval),
@@ -55,7 +57,7 @@ export const getSalesByProductIdController = withController(
 
 export const postNewSaleController = withController(
   async (req: Request, res: Response) => {
-    const product = await getProductByIdService(req.params.id);
+    const product = await getProductByIdService(req.params.productId);
     const body = handleZodParsed(ZodSaleRequestBody.safeParse(req.body));
     const sale = await createSaleService(product, body);
 
