@@ -1,7 +1,5 @@
 <p align="center">
-<h1>
 <img height="100" src="./assets/images/logo_readme.png"/>
-</h1>
 </p>
 
 > [!WARNING]
