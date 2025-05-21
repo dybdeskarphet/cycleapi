@@ -1,4 +1,8 @@
-# 📈 CycleAPI
+<center>
+<h1>
+<img height="100" src="./assets/images/logo_readme.png"/>
+</h1>
+</center>
 
 > [!WARNING]
 > This project is still under development. Use at your own risk.
