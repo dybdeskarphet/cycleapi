@@ -25,8 +25,6 @@ export const requireAdminAuth = (
   next();
 };
 
-// TODO: Now it's time to write the requireScope middleware
-
 export const requireScope = (requiredScopes: Scopes[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {

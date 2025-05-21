@@ -24,8 +24,6 @@ export const successResponseFactory = (
   };
 };
 
-// TODO: Better naming for these
-// TODO: Also, use string for errorEntry for custom messages, some http error responses can have multiple types of problems.
 export const errorResponseFactory = (
   errorEntryOrString: ErrorEntry | string,
   schemas: ZodTypeAny,
