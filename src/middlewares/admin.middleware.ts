@@ -7,6 +7,7 @@ import { Scopes } from "../enums/scopes.enum";
 import { z } from "zod";
 import { handleZodParsed } from "../utils/express.utils";
 import { getTokenByItselfService } from "../services/token.service";
+import "dotenv/config";
 
 export const requireAdminAuth = (
   req: Request,
@@ -33,6 +34,10 @@ export const requireScope = (requiredScopes: Scopes[]) => {
           .string({ message: "You have to provide an API token." })
           .safeParse(req.header("x-api-key")),
       );
+
+      if (tokenString === process.env.ADMIN_API_TOKEN) {
+        return next();
+      }
 
       const token = await getTokenByItselfService(tokenString);
 
