@@ -4,13 +4,15 @@ import { SaleDocument } from "./sale.types";
 import { z } from "zod";
 import { Sale } from "../models/sale.model";
 
+// NOTE: There is no way to convert this zod object to IProduct,
+// nor the ZodISale to ISale, I tried everything.
 export const ZodIProduct = z.object({
   name: z.string(),
   category: z.string(),
   launchDate: z.date(),
   price: z.number(),
   region: z.nativeEnum(Region),
-  sales: z.array(z.instanceof(Types.ObjectId).or(z.instanceof(Sale))),
+  sales: z.array(z.union([z.instanceof(Types.ObjectId), z.string()])),
 });
 
 export interface IProduct {
@@ -32,7 +34,7 @@ export namespace ProductRequestBody {
     price: z.number(),
     region: z.nativeEnum(Region).optional(),
     sales: z
-      .array(z.instanceof(Types.ObjectId).or(z.instanceof(Sale)))
+      .array(z.union([z.instanceof(Types.ObjectId), z.instanceof(Sale)]))
       .optional(),
   });
 

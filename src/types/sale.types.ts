@@ -1,10 +1,9 @@
 import { Types, HydratedDocument } from "mongoose";
 import { z } from "zod";
-import { Product } from "../models/product.model";
 import { ProductDocument } from "./product.types";
 
 export const ZodISale = z.object({
-  product: z.instanceof(Types.ObjectId).or(z.instanceof(Product)),
+  product: z.union([z.instanceof(Types.ObjectId), z.string()]),
   amount: z.number().min(1),
   customPrice: z.number(),
   createdAt: z.date(),
