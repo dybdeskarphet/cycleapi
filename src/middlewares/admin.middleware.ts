@@ -35,7 +35,7 @@ export const requireScope = (requiredScopes: Scopes[]) => {
           .safeParse(req.header("x-api-key")),
       );
 
-      if (tokenString === process.env.ADMIN_API_TOKEN) {
+      if (process.env.NODE_ENV === "development") {
         return next();
       }
 
