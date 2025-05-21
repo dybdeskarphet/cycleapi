@@ -21,6 +21,11 @@
         border-radius: 4px;
         cursor: pointer;
       }
+
+      #nav-logo {
+        display: block;
+        margin: 1rem auto;
+      }
     </style>
   </head>
   <body>
@@ -29,11 +34,19 @@
     <rapi-doc
       api-key-name="x-api-key"
       api-key-location="header"
-      api-key-value=" "
+      api-key-value="-"
+      show-header="false"
       id="rapi-doc"
       spec-url="/api-docs.json"
-      theme="light"
-    ></rapi-doc>
+      theme="dark"
+    >
+      <img
+        width="250"
+        id="nav-logo"
+        slot="nav-logo"
+        src="/assets/images/logo_navbar.png"
+      />
+    </rapi-doc>
 
     <script>
       const rapidoc = document.getElementById("rapi-doc");
@@ -47,7 +60,6 @@
           rapidoc.setAttribute("primary-color", "#D7E8CD");
           rapidoc.setAttribute("bg-color", "#11140F");
           rapidoc.setAttribute("text-color", "#f2f5eb");
-          rapidoc.setAttribute("header-color", "#272b25");
         } else {
           toggleButton.textContent = "🌞";
           toggleButton.style.backgroundColor = "#2A2D23";
@@ -55,7 +67,6 @@
           rapidoc.setAttribute("primary-color", "#a2b894");
           rapidoc.setAttribute("bg-color", "#f2f5eb");
           rapidoc.setAttribute("text-color", "#11140F");
-          rapidoc.setAttribute("header-color", "##ddf0d3");
         }
       };
 
