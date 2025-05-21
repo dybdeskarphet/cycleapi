@@ -19,6 +19,8 @@ await connectDatabase(__filename);
 
 app.use(express.json({ verify: jsonVerify }));
 
+app.use("/assets", express.static(path.join(__dirname, "..", "assets")));
+
 app.get("/api-docs.json", (req, res) => {
   res.json(openApiDocument);
 });
