@@ -29,15 +29,15 @@ export const requireAdminAuth = (
 export const requireScope = (requiredScopes: Scopes[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
+      if (process.env.NODE_ENV === "development") {
+        return next();
+      }
+
       const tokenString = handleZodParsed(
         z
           .string({ message: "You have to provide an API token." })
           .safeParse(req.header("x-api-key")),
       );
-
-      if (process.env.NODE_ENV === "development") {
-        return next();
-      }
 
       const token = await getTokenByItselfService(tokenString);
 
