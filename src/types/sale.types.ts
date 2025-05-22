@@ -1,13 +1,18 @@
 import { Types, HydratedDocument } from "mongoose";
 import { z } from "zod";
 import { ProductDocument } from "./product.types";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { DateWithOpenapi, ObjectIdWithOpenapi } from "./global.types";
+import { timeToDate } from "../utils/time.utils";
+
+extendZodWithOpenApi(z);
 
 export const ZodISale = z.object({
-  product: z.union([z.instanceof(Types.ObjectId), z.string()]),
+  product: ObjectIdWithOpenapi,
   amount: z.number().min(1),
   customPrice: z.number(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: DateWithOpenapi,
+  updatedAt: DateWithOpenapi,
 });
 
 export interface ISale {
@@ -34,7 +39,9 @@ export namespace SaleRequestBody {
 export namespace IMiniSale {
   export const Zod = z.object({
     amount: z.number(),
-    createdAt: z.string(),
+    createdAt: z.string().openapi({
+      example: timeToDate(new Date(), "week"),
+    }),
   });
 
   export type TS = z.infer<typeof Zod>;
@@ -43,7 +50,7 @@ export namespace IMiniSale {
 export namespace RestoreSaleInputSchema {
   export const Zod = z
     .object({
-      _id: z.instanceof(Types.ObjectId).optional(),
+      _id: ObjectIdWithOpenapi.optional(),
       amount: z.number(),
       customPrice: z.number().optional(),
       createdAt: z.string().datetime(),

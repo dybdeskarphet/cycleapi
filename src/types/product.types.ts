@@ -3,16 +3,20 @@ import Region from "../enums/region.enum";
 import { SaleDocument } from "./sale.types";
 import { z } from "zod";
 import { Sale } from "../models/sale.model";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { DateWithOpenapi, ObjectIdWithOpenapi } from "./global.types";
+
+extendZodWithOpenApi(z);
 
 // NOTE: There is no way to convert this zod object to IProduct,
 // nor the ZodISale to ISale, I tried everything.
 export const ZodIProduct = z.object({
   name: z.string(),
   category: z.string(),
-  launchDate: z.date(),
+  launchDate: DateWithOpenapi,
   price: z.number(),
   region: z.nativeEnum(Region),
-  sales: z.array(z.union([z.instanceof(Types.ObjectId), z.string()])),
+  sales: z.array(ObjectIdWithOpenapi),
 });
 
 export interface IProduct {
@@ -34,7 +38,7 @@ export namespace ProductRequestBody {
     price: z.number(),
     region: z.nativeEnum(Region).optional(),
     sales: z
-      .array(z.union([z.instanceof(Types.ObjectId), z.instanceof(Sale)]))
+      .array(z.union([ObjectIdWithOpenapi, z.instanceof(Sale)]))
       .optional(),
   });
 
@@ -44,14 +48,14 @@ export namespace ProductRequestBody {
 export namespace ProductFilterBody {
   export const Zod = z
     .object({
-      _id: z.instanceof(Types.ObjectId),
+      _id: ObjectIdWithOpenapi,
       name: z.string(),
       category: z.string(),
       price: z.number(),
-      launchDate: z.date(),
+      launchDate: DateWithOpenapi,
       region: z.nativeEnum(Region),
-      createdAt: z.date(),
-      updatedAt: z.date(),
+      createdAt: DateWithOpenapi,
+      updatedAt: DateWithOpenapi,
     })
     .partial();
   export type TS = z.infer<typeof Zod>;
