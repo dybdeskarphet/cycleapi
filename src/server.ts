@@ -15,7 +15,7 @@ import "dotenv/config";
 const app: Express = express();
 const port = process.env.API_PORT || 3000;
 
-await connectDatabase(__filename);
+await connectDatabase(path.relative(process.cwd(), __filename));
 
 app.use(express.json({ verify: jsonVerify }));
 
