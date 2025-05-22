@@ -6,11 +6,7 @@ import {
   ErrorEntries,
   SuccessEntries,
 } from "../../constants/messages.constants";
-import {
-  NoProductFoundError,
-  ObjectIdSchema,
-  ProductIDParam,
-} from "../components/products";
+import { NoProductFoundError, ProductIDParam } from "../components/products";
 import {
   CompleteSale,
   DeleteSaleByIdResponse,
@@ -27,6 +23,7 @@ import {
   bodyRequestFactory,
   errorResponseFactory,
 } from "../utils";
+import { ObjectIdSchema } from "../components/global";
 
 extendZodWithOpenApi(z);
 

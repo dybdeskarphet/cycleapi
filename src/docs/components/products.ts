@@ -1,26 +1,28 @@
-import { z, ZodRawShape } from "zod";
+import { z } from "zod";
 import {
   SuccessEntries,
   ErrorEntries,
 } from "../../constants/messages.constants";
-import { Types } from "mongoose";
-import { ZodIProduct } from "../../types/product.types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import {
   DeleteCountResponseItem,
   errorJsonFactory,
   successResponseFactory,
 } from "../utils";
+import { ZodIProduct } from "../../types/product.types";
+import { ObjectIdSchema } from "./global";
+import { ObjectIdWithOpenapi, DateWithOpenapi } from "../../types/global.types";
+
 extendZodWithOpenApi(z);
 
 export const CompleteProduct = z
   .object({
-    _id: z.instanceof(Types.ObjectId),
+    _id: ObjectIdWithOpenapi,
   })
   .merge(ZodIProduct)
   .extend({
-    createdAt: z.date(),
-    updatedAt: z.date(),
+    createdAt: DateWithOpenapi,
+    updatedAt: DateWithOpenapi,
     __v: z.number().default(0),
   });
 
@@ -45,8 +47,6 @@ export const DeleteProductByIdResponse = successResponseFactory(
 );
 
 export const NoProductFoundError = errorJsonFactory(ErrorEntries.NO_PRODUCT);
-
-export const ObjectIdSchema = z.string().regex(/^[a-f\d]{24}$/i);
 
 export const ProductIDParam = z.object({
   productId: ObjectIdSchema.openapi({

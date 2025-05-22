@@ -11,15 +11,16 @@ import {
 } from "../utils";
 import { Types } from "mongoose";
 import { IMiniSale, ZodISale } from "../../types/sale.types";
+import { DateWithOpenapi, ObjectIdWithOpenapi } from "../../types/global.types";
 
 export const CompleteSale = z
   .object({
-    _id: z.instanceof(Types.ObjectId),
+    _id: ObjectIdWithOpenapi,
   })
   .merge(ZodISale)
   .extend({
-    createdAt: z.date(),
-    updatedAt: z.date(),
+    createdAt: DateWithOpenapi,
+    updatedAt: DateWithOpenapi,
     __v: z.number().default(0),
   });
 

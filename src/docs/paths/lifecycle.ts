@@ -3,15 +3,8 @@ import {
   RouteConfig,
 } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
-import {
-  NoProductFoundError,
-  ObjectIdSchema,
-  ProductIDParam,
-} from "../components/products";
-import {
-  ErrorEntries,
-  SuccessEntries,
-} from "../../constants/messages.constants";
+import { NoProductFoundError, ProductIDParam } from "../components/products";
+import { ErrorEntries } from "../../constants/messages.constants";
 import {
   BadRequestZod,
   bodyRequestFactory,

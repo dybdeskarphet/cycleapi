@@ -3,6 +3,7 @@ import { ErrorEntry, SuccessEntry } from "../types/express.types";
 import { ErrorEntries } from "../constants/messages.constants";
 import { Types } from "mongoose";
 import { ZodMediaTypeObject } from "@asteasolutions/zod-to-openapi";
+import { ObjectIdWithOpenapi } from "../types/global.types";
 
 export const successResponseFactory = (
   successEntry: SuccessEntry,
@@ -65,7 +66,7 @@ export const BadRequestZod = errorJsonFactory(ErrorEntries.ZOD_ERROR, true);
 export const DeleteCountResponseItem = z.number().default(1);
 
 export const MiniProductResponseItem = z.object({
-  _id: z.instanceof(Types.ObjectId),
+  _id: ObjectIdWithOpenapi,
   name: z.string(),
 });
 

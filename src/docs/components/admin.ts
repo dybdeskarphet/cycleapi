@@ -4,17 +4,17 @@ import {
   SuccessEntries,
 } from "../../constants/messages.constants";
 import { errorJsonFactory, successResponseFactory } from "../utils";
-import { Types } from "mongoose";
 import { IToken } from "../../types/token.types";
+import { ObjectIdWithOpenapi, DateWithOpenapi } from "../../types/global.types";
 
 export const CompleteToken = z
   .object({
-    _id: z.instanceof(Types.ObjectId),
+    _id: ObjectIdWithOpenapi,
   })
   .merge(IToken.Zod)
   .extend({
-    createdAt: z.date(),
-    updatedAt: z.date(),
+    createdAt: DateWithOpenapi,
+    updatedAt: DateWithOpenapi,
     __v: z.number().default(0),
   });
 

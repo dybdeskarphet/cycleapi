@@ -11,7 +11,6 @@ import {
   GetProductByIdResponse,
   GetProductsResponse,
   NoProductFoundError,
-  ObjectIdSchema,
   PostProductResponse,
   ProductIDParam,
 } from "../components/products";
