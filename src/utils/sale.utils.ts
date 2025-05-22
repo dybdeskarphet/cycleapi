@@ -73,19 +73,26 @@ export const convertSalesDateRange = async (
     (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
   );
 
+  let intervalToTimeUnit = "";
+
   switch (interval) {
     case Intervals.Yearly:
-      return await calculateSalesDateInterval(sortedSales, "year");
+      intervalToTimeUnit = "year";
+      break;
     case Intervals.Monthly:
-      return await calculateSalesDateInterval(sortedSales, "month");
+      intervalToTimeUnit = "month";
+      break;
     case Intervals.Daily:
-      return await calculateSalesDateInterval(sortedSales, "full");
+      intervalToTimeUnit = "full";
+      break;
     case Intervals.Weekly:
-      return await calculateSalesDateInterval(sortedSales, "week");
-    default:
-      throw new ApiError(
-        StatusCodes.BAD_REQUEST,
-        ErrorEntries.INVALID_INTERVAL,
-      );
+      intervalToTimeUnit = "week";
+      break;
+  }
+
+  if (intervalToTimeUnit !== "") {
+    return await calculateSalesDateInterval(sortedSales, intervalToTimeUnit);
+  } else {
+    throw new ApiError(StatusCodes.BAD_REQUEST, ErrorEntries.INVALID_INTERVAL);
   }
 };
