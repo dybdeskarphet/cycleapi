@@ -37,7 +37,7 @@ export const getMovingAveragesDocument: RouteConfig = {
   responses: {
     200: MovingAveragesResponse,
     404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
-    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
+    400: errorResponseFactory(ErrorEntries.INVALID_PARAMETERS, BadRequestZod),
   },
 };
 
@@ -53,7 +53,7 @@ export const getGrowthRatesDocument: RouteConfig = {
   responses: {
     200: GrowthRatesResponse,
     404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
-    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
+    400: errorResponseFactory(ErrorEntries.INVALID_PARAMETERS, BadRequestZod),
   },
 };
 
@@ -69,7 +69,7 @@ export const getAccelerationRatesDocument: RouteConfig = {
   responses: {
     200: AccelerationRatesResponse,
     404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
-    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
+    400: errorResponseFactory(ErrorEntries.INVALID_PARAMETERS, BadRequestZod),
   },
 };
 
@@ -85,7 +85,7 @@ export const lrSlopesDocument: RouteConfig = {
   responses: {
     200: LinearRegressionSlopesResponse,
     404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
-    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
+    400: errorResponseFactory(ErrorEntries.INVALID_PARAMETERS, BadRequestZod),
   },
 };
 
@@ -101,6 +101,6 @@ export const phasesDocument: RouteConfig = {
   responses: {
     200: PhasesResponse,
     404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
-    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
+    400: errorResponseFactory(ErrorEntries.INVALID_PARAMETERS, BadRequestZod),
   },
 };

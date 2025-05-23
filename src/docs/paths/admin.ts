@@ -4,10 +4,7 @@ import {
 } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { TokenRequestBody } from "../../types/token.types";
-import {
-  ErrorEntries,
-  SuccessEntries,
-} from "../../constants/messages.constants";
+import { ErrorEntries } from "../../constants/messages.constants";
 import {
   GenerateTokenResponse,
   InvalidTimeoutError,

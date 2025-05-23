@@ -2,10 +2,7 @@ import {
   extendZodWithOpenApi,
   RouteConfig,
 } from "@asteasolutions/zod-to-openapi";
-import {
-  ErrorEntries,
-  SuccessEntries,
-} from "../../constants/messages.constants";
+import { ErrorEntries } from "../../constants/messages.constants";
 import {
   DeleteProductByIdResponse,
   GetProductByIdResponse,
@@ -48,7 +45,7 @@ export const postProductDocument: RouteConfig = {
   },
   responses: {
     201: PostProductResponse,
-    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
+    400: errorResponseFactory(ErrorEntries.INVALID_PARAMETERS, BadRequestZod),
   },
 };
 
@@ -62,7 +59,7 @@ export const filterProductDocument: RouteConfig = {
   },
   responses: {
     200: GetProductsResponse,
-    400: errorResponseFactory(ErrorEntries.ZOD_ERROR, BadRequestZod),
+    400: errorResponseFactory(ErrorEntries.INVALID_PARAMETERS, BadRequestZod),
   },
 };
 

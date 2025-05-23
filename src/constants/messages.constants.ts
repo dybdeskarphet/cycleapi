@@ -60,8 +60,8 @@ export const ErrorEntries = {
     code: "INSUFFICIENT_PERMISSIONS",
     message: "You don't have the permission to access this endpoint.",
   },
-  ZOD_ERROR: {
-    code: "ZOD_ERROR",
+  INVALID_PARAMETERS: {
+    code: "INVALID_PARAMETERS",
     message: "Invalid parameters. See the 'errors' field for details.",
   },
   INVALID_TIMEOUT: {
