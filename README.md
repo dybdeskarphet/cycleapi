@@ -1,5 +1,9 @@
 <p align="center">
 <img height="100" src="./assets/images/logo_readme.png"/>
+<br/>
+<img alt="Express Version" src="https://img.shields.io/badge/express.js-v4.x.x-D7E8CD?labelColor=2A2D23&style=flat-square">
+<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/dybdeskarphet/cycleapi/bun.yml?style=flat-square&label=Build%20Test&labelColor=2A2D23&color=%23D7E8CD">
+<img alt="OpenAPI Info" src="https://img.shields.io/badge/OpenAPI-v3.0.0 with rapidoc-D7E8CD?labelColor=2A2D23&style=flat-square">
 </p>
 
 > [!WARNING]
