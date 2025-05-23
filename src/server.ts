@@ -1,16 +1,16 @@
-import express, { Express, Request, Response } from "express";
-import ip from "ip";
-import connectDatabase from "./db";
-import { productRoutes } from "./routes/product.routes";
-import { lifecycleRoutes } from "./routes/lifecycle.routes";
-import { openApiDocument } from "./docs/openapi";
-import path from "path";
-import { adminRoutes } from "./routes/admin.routes";
-import { errorHandler } from "./middlewares/error-handler.middlware";
 import "body-parser";
-import { jsonVerify } from "./utils/express.utils";
 import { consola } from "consola";
 import "dotenv/config";
+import express, { Express, Request, Response } from "express";
+import ip from "ip";
+import path from "path";
+import connectDatabase from "./db";
+import { openApiDocument } from "./docs/openapi";
+import { errorHandler } from "./middlewares/error-handler.middlware";
+import { adminRoutes } from "./routes/v1/admin.routes";
+import { lifecycleRoutes } from "./routes/v1/lifecycle.routes";
+import { productRoutes } from "./routes/v1/product.routes";
+import { jsonVerify } from "./utils/express.utils";
 
 const app: Express = express();
 const port = process.env.API_PORT || 3000;
