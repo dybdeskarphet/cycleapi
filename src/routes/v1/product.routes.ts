@@ -4,15 +4,15 @@ import {
   getProductsController,
   getProductByIdController,
   postProductController,
-} from "../controllers/product.controller";
+} from "../../controllers/product.controller";
 import {
   deleteSaleByIdController,
   getSalesByProductIdController,
   postNewSaleController,
   restoreOldSalesController,
-} from "../controllers/sales.controller";
-import { requireScope } from "../middlewares/admin.middleware";
-import { Scopes } from "../enums/scopes.enum";
+} from "../../controllers/sales.controller";
+import { requireScope } from "../../middlewares/admin.middleware";
+import { Scopes } from "../../enums/scopes.enum";
 
 const router = express.Router();
 

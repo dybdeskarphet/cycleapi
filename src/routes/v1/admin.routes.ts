@@ -1,6 +1,6 @@
 import express from "express";
-import { requireAdminAuth } from "../middlewares/admin.middleware";
-import { generateTokenController } from "../controllers/admin.controller";
+import { requireAdminAuth } from "../../middlewares/admin.middleware";
+import { generateTokenController } from "../../controllers/admin.controller";
 
 const router = express.Router();
 

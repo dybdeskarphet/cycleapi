@@ -5,9 +5,9 @@ import {
   getMovingAveragesController,
   getMovingLinearRegressionSlopesController,
   getSalesAccelerationController,
-} from "../controllers/lifecycle.controller";
-import { requireScope } from "../middlewares/admin.middleware";
-import { Scopes } from "../enums/scopes.enum";
+} from "../../controllers/lifecycle.controller";
+import { requireScope } from "../../middlewares/admin.middleware";
+import { Scopes } from "../../enums/scopes.enum";
 
 const router = express.Router();
 
