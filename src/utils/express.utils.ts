@@ -29,7 +29,7 @@ export const handleZodParsed = <Input, Output = Input>(
   if (!parsed.success) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      ErrorEntries.ZOD_ERROR,
+      ErrorEntries.INVALID_PARAMETERS,
       parsed.error.issues,
     );
   }
