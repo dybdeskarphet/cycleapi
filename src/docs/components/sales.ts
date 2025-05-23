@@ -9,7 +9,6 @@ import {
   successResponseFactory,
   MiniProductResponseItem,
 } from "../utils";
-import { Types } from "mongoose";
 import { IMiniSale, ZodISale } from "../../types/sale.types";
 import { DateWithOpenapi, ObjectIdWithOpenapi } from "../../types/global.types";
 

@@ -1,5 +1,4 @@
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { Types } from "mongoose";
 import { z } from "zod";
 
 extendZodWithOpenApi(z);

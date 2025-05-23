@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { IToken, TokenRequestBody } from "../types/token.types";
+import { TokenRequestBody } from "../types/token.types";
 import { Token } from "../models/token.model";
 import ms, { StringValue } from "ms";
 import { ApiError } from "../errors/api.error";

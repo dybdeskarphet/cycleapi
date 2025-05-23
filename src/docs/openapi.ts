@@ -1,10 +1,18 @@
-import "dotenv/config";
-import ip from "ip";
 import {
   OpenAPIRegistry,
   OpenApiGeneratorV3,
   RouteConfig,
 } from "@asteasolutions/zod-to-openapi";
+import { OpenAPIObjectConfig } from "@asteasolutions/zod-to-openapi/dist/v3.0/openapi-generator";
+import "dotenv/config";
+import ip from "ip";
+import { postGenerateTokenDocument } from "./paths/admin";
+import {
+  getGrowthRatesDocument,
+  getMovingAveragesDocument,
+  lrSlopesDocument,
+  phasesDocument,
+} from "./paths/lifecycle";
 import {
   deleteProductByIdDocument,
   filterProductDocument,
@@ -18,14 +26,6 @@ import {
   postRestoreSalesDocument,
   postSaleDocument,
 } from "./paths/sales";
-import {
-  getGrowthRatesDocument,
-  getMovingAveragesDocument,
-  lrSlopesDocument,
-  phasesDocument,
-} from "./paths/lifecycle";
-import { OpenAPIObjectConfig } from "@asteasolutions/zod-to-openapi/dist/v3.0/openapi-generator";
-import { postGenerateTokenDocument } from "./paths/admin";
 
 export const registry = new OpenAPIRegistry();
 
