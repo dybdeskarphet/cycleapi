@@ -3,7 +3,7 @@
 </p>
 
 > [!WARNING]
-> This project is still under development. Use at your own risk.
+> Even though this project is released, it's still under development. Use at your own risk.
 
 A RESTful API built with Express.js and TypeScript to analyze and forecast product lifecycle trends using sales data. This system helps categorize products into lifecycle phases and calculate growth and regression metrics, offering valuable insights for marketing and production planning.
 
@@ -14,6 +14,7 @@ A RESTful API built with Express.js and TypeScript to analyze and forecast produ
 - 📉 **Linear Regression Slopes** — Analyze acceleration/deceleration trends.
 - 🧬 **Lifecycle Phase Detection** — Automatically determine product phases (e.g. Introduction, Growth, Maturity, Decline) using regression-based heuristics.
 - 🧪 **Built-in Validation** — Uses Zod to validate all input data.
+- 🔒 **Authentication and scopes** — Use scopes like `read:products` or `write:sales` to give authentication to users.
 
 ## 🔗 API Endpoints
 
@@ -33,6 +34,7 @@ A RESTful API built with Express.js and TypeScript to analyze and forecast produ
 | POST   | `/lifecycle/:id/acceleration-rates`  | Get acceleration rates            |
 | POST   | `/lifecycle/:id/lr-slopes`           | Get linear regression slopes      |
 | POST   | `/lifecycle/:id/phases-with-lr`      | Get lifecycle phases with LR      |
+| POST   | `/admin/generate-token`              | SGenerate API key/token           |
 
 ## 🚀 Usage
 
