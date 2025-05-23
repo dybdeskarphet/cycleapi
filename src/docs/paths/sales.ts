@@ -38,6 +38,7 @@ export const getSalesByIntervalDocument: RouteConfig = {
   },
   responses: {
     200: GetSalesResponse,
+    400: errorResponseFactory(ErrorEntries.INVALID_PARAMETERS, BadRequestZod),
     404: errorResponseFactory(ErrorEntries.NO_PRODUCT, NoProductFoundError),
   },
 };

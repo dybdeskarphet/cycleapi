@@ -1,8 +1,6 @@
-import { z, ZodObject, ZodRawShape, ZodTypeAny } from "zod";
-import { ErrorEntry, SuccessEntry } from "../types/express.types";
+import { z, ZodRawShape, ZodTypeAny } from "zod";
 import { ErrorEntries } from "../constants/messages.constants";
-import { Types } from "mongoose";
-import { ZodMediaTypeObject } from "@asteasolutions/zod-to-openapi";
+import { ErrorEntry, SuccessEntry } from "../types/express.types";
 import { ObjectIdWithOpenapi } from "../types/global.types";
 
 export const successResponseFactory = (
@@ -61,7 +59,10 @@ export const errorJsonFactory = (
   return errors ? error.extend({ errors: z.array(z.object({})) }) : error;
 };
 
-export const BadRequestZod = errorJsonFactory(ErrorEntries.ZOD_ERROR, true);
+export const BadRequestZod = errorJsonFactory(
+  ErrorEntries.INVALID_PARAMETERS,
+  true,
+);
 
 export const DeleteCountResponseItem = z.number().default(1);
 
