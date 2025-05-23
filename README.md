@@ -38,7 +38,7 @@ A RESTful API built with Express.js and TypeScript to analyze and forecast produ
 | POST   | `/lifecycle/:id/acceleration-rates`  | Get acceleration rates            |
 | POST   | `/lifecycle/:id/lr-slopes`           | Get linear regression slopes      |
 | POST   | `/lifecycle/:id/phases-with-lr`      | Get lifecycle phases with LR      |
-| POST   | `/admin/generate-token`              | SGenerate API key/token           |
+| POST   | `/admin/generate-token`              | Generate API key/token            |
 
 ## 🚀 Usage
 
